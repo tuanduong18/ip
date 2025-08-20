@@ -1,8 +1,8 @@
-public class Todo {
+public class Task {
     private final String name;
     private boolean status = false;
 
-    public Todo(String name) {
+    public Task(String name) {
         this.name = name;
     }
 
