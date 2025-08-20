@@ -48,7 +48,7 @@ public class Barry {
         String[] s = command.split(" ");
         String mark = s[0];
         int id = Integer.parseInt(s[1]);
-        if (id > tasksList.size() || id < 0) {
+        if (id > tasksList.size() || id <= 0) {
             System.out.println("    " + "_".repeat(50));
             System.out.println("    " + "Invalid todo");
             System.out.println("    " + "_".repeat(50));
