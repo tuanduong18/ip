@@ -10,6 +10,9 @@ public class Barry {
         endSession();
     }
 
+    /**
+     * Prints the greeting banner and a short introduction for the chatbot.
+     */
     public static void greetings() {
         String name = "Barry";
         System.out.println("\t" + "_".repeat(50));
@@ -18,6 +21,9 @@ public class Barry {
         System.out.println("\t" + "_".repeat(50));
     }
 
+    /**
+     * Runs the main loop to read and process user commands.
+     */
     public static void startSession() {
         Scanner scan = new Scanner(System.in);
         while(true) {
@@ -40,6 +46,11 @@ public class Barry {
         }
     }
 
+    /**
+     * Adds a new task to the list.
+     *
+     * @param content the command string describing the task
+     */
     public static void addTask(String content) {
         System.out.println("\t" + "_".repeat(50));
         if (Pattern.matches("todo .*", content)) {
@@ -65,6 +76,11 @@ public class Barry {
         System.out.println("\t" + "_".repeat(50));
     }
 
+    /**
+     * Marks the task as done or undone.
+     *
+     * @param command the user input containing the action and task index
+     */
     public static void markTask(String command) {
         String[] s = command.split(" ");
         String mark = s[0];
@@ -86,6 +102,9 @@ public class Barry {
         }
     }
 
+    /**
+     * Prints all tasks currently stored in tasksList, with their status and index.
+     */
     public static void printList() {
         System.out.println("\t" + "_".repeat(50));
         System.out.println("\tHere are the tasks in your list:");
@@ -97,6 +116,9 @@ public class Barry {
         System.out.println("\t" + "_".repeat(50));
     }
 
+    /**
+     * Prints the goodbye message.
+     */
     public static void endSession() {
         System.out.println("\t" + "Bye. Hope to see you again soon!");
         System.out.println("\t" + "_".repeat(50));
