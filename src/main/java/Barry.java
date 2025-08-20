@@ -46,9 +46,13 @@ public class Barry {
             String name = content.substring(5);
             tasksList.add(new Todo(name));
             int n = tasksList.size();
-        } else if (Pattern.matches("deadline .* /by .*", content)){
+        } else if (Pattern.matches("deadline .* /by .*", content)) {
             String[] ss = content.substring(9).split(" /by ", 2);
             tasksList.add(new Deadline(ss[0], ss[1]));
+        } else if ((Pattern.matches("event .* /from .* /to .*", content))) {
+            String[] s1 = content.substring(6).split(" /from ", 2);
+            String[] s2 = s1[1].split(" /to ", 2);
+            tasksList.add(new Event(s1[0], s2[0], s2[1]));
         } else {
             System.out.println("\tInvalid command");
             System.out.println("\t" + "_".repeat(50));
