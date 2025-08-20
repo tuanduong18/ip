@@ -1,0 +1,13 @@
+list
+todo eat dinner
+deadline finish the quiz /by Friday 4pm
+list
+todo play captains ball
+event Orbital Splashdown /from 5:30 /to 8:00 on Wednesday
+list
+mark 1
+mark 2
+list
+unmark 2
+list
+bye
