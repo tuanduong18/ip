@@ -14,9 +14,19 @@ public class Barry {
      * Prints the greeting banner and a short introduction for the chatbot.
      */
     public static void greetings() {
-        String name = "Barry";
+        String name = "\t$$$$$$$\\\n"
+                + "\t$$  __$$\\\n"
+                + "\t$$ |  $$ | $$$$$$\\   $$$$$$\\   $$$$$$\\  $$\\   $$\\\n"
+                + "\t$$$$$$$\\ | \\____$$\\ $$  __$$\\ $$  __$$\\ $$ |  $$ |\n"
+                + "\t$$  __$$\\  $$$$$$$ |$$ |  \\__|$$ |  \\__|$$ |  $$ |\n"
+                + "\t$$ |  $$ |$$  __$$ |$$ |      $$ |      $$ |  $$ |\n"
+                + "\t$$$$$$$  |\\$$$$$$$ |$$ |      $$ |      \\$$$$$$$ |\n"
+                + "\t\\_______/  \\_______|\\__|      \\__|       \\____$$ |\n"
+                + "\t                                        $$\\   $$ |\n"
+                + "\t                                        \\$$$$$$  |\n"
+                + "\t                                         \\______/";
         System.out.println("\t" + "_".repeat(50));
-        System.out.println("\t" + "Hello I'm " + name);
+        System.out.println("\t" + "Hello from\n\n" + name);
         System.out.println("\t" + "What can I do for you?");
         System.out.println("\t" + "_".repeat(50));
     }
@@ -70,7 +80,7 @@ public class Barry {
             return;
         }
         int n = tasksList.size();
-        System.out.println("\t" + "Got it. I've added this task: ");
+        System.out.println("\t" + "Got it. I've added this task:");
         System.out.println("\t\t" + tasksList.get(n - 1));
         System.out.println("\tNow you have " + n + (n > 1 ? " tasks " : " task ") + "in the list.");
         System.out.println("\t" + "_".repeat(50));
