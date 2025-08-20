@@ -46,10 +46,18 @@ public class Barry {
             String name = content.substring(5);
             tasksList.add(new Todo(name));
             int n = tasksList.size();
-            System.out.println("\t" + "Got it. I've added this task: ");
-            System.out.println("\t\t" + tasksList.get(n - 1));
-            System.out.println("\tNow you have " + n + (n > 1 ? " tasks " : " task ") + "in the list.");
+        } else if (Pattern.matches("deadline .* /by .*", content)){
+            String[] ss = content.substring(9).split(" /by ", 2);
+            tasksList.add(new Deadline(ss[0], ss[1]));
+        } else {
+            System.out.println("\tInvalid command");
+            System.out.println("\t" + "_".repeat(50));
+            return;
         }
+        int n = tasksList.size();
+        System.out.println("\t" + "Got it. I've added this task: ");
+        System.out.println("\t\t" + tasksList.get(n - 1));
+        System.out.println("\tNow you have " + n + (n > 1 ? " tasks " : " task ") + "in the list.");
         System.out.println("\t" + "_".repeat(50));
     }
 
@@ -76,6 +84,7 @@ public class Barry {
 
     public static void printList() {
         System.out.println("\t" + "_".repeat(50));
+        System.out.println("\tHere are the tasks in your list:");
         int i = 1;
         for (Task item : tasksList) {
             System.out.println("\t" + i + "." + item.toString());
