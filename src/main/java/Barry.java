@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Barry {
     public static void main(String[] args) {
         greetings();
@@ -14,7 +16,17 @@ public class Barry {
     }
 
     public static void startSession() {
-
+        Scanner scan = new Scanner(System.in);
+        while(true) {
+            String temp = scan.nextLine();
+            if(temp.equals("bye")) {
+                System.out.println("_".repeat(50));
+                break;
+            }
+            System.out.println("_".repeat(50));
+            System.out.println(temp);
+            System.out.println("_".repeat(50));
+        }
     }
 
     public static void endSession() {
