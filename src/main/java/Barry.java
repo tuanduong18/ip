@@ -1,8 +1,10 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Barry {
-    private static ArrayList<Todo> todosList = new ArrayList<>();
+    private static ArrayList<Task> tasksList = new ArrayList<>();
     public static void main(String[] args) {
         greetings();
         startSession();
@@ -26,11 +28,39 @@ public class Barry {
                 break;
             } else if (temp.equals("list")) {
                 printList();
-                continue;
+            } else if (Pattern.matches("(mark|unmark) (-|)[0-9]+", temp)) {
+                markTask(temp);
+            } else {
+                addTask(temp);
             }
+
+        }
+    }
+
+    public static void addTask(String name) {
+        System.out.println("    " + "_".repeat(50));
+        tasksList.add(new Task(name));
+        System.out.println("    " + "added: " + name);
+        System.out.println("    " + "_".repeat(50));
+    }
+
+    public static void markTask(String command) {
+        String[] s = command.split(" ");
+        String mark = s[0];
+        int id = Integer.parseInt(s[1]);
+        if (id > tasksList.size() || id < 0) {
             System.out.println("    " + "_".repeat(50));
-            todosList.add(new Todo(temp));
-            System.out.println("    " + "added: " + temp);
+            System.out.println("    " + "Invalid todo");
+            System.out.println("    " + "_".repeat(50));
+        } else {
+            System.out.println("    " + "_".repeat(50));
+            tasksList.get(id - 1).setStatus(mark.equals("mark"));
+            if(mark.equals("mark")) {
+                System.out.println("    " + "Nice! I've marked this task as done:");
+            } else {
+                System.out.println("    " + "Ok! I've marked this task as not done yet:");
+            }
+            System.out.println("        " + tasksList.get(id - 1));
             System.out.println("    " + "_".repeat(50));
         }
     }
@@ -38,7 +68,7 @@ public class Barry {
     public static void printList() {
         System.out.println("    " + "_".repeat(50));
         int i = 1;
-        for (Todo item : todosList) {
+        for (Task item : tasksList) {
             System.out.println("    " + i + "." + item.toString());
             i++;
         }
