@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Barry {
-    private static ArrayList<String> todosList = new ArrayList<>();
+    private static ArrayList<Todo> todosList = new ArrayList<>();
     public static void main(String[] args) {
         greetings();
         startSession();
@@ -29,7 +29,7 @@ public class Barry {
                 continue;
             }
             System.out.println("    " + "_".repeat(50));
-            todosList.add(temp);
+            todosList.add(new Todo(temp));
             System.out.println("    " + "added: " + temp);
             System.out.println("    " + "_".repeat(50));
         }
@@ -38,8 +38,8 @@ public class Barry {
     public static void printList() {
         System.out.println("    " + "_".repeat(50));
         int i = 1;
-        for (String item : todosList) {
-            System.out.println("    " + i + ". " + item);
+        for (Todo item : todosList) {
+            System.out.println("    " + i + "." + item.toString());
             i++;
         }
         System.out.println("    " + "_".repeat(50));
