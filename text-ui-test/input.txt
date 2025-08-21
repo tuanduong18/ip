@@ -1,13 +1,52 @@
+blah
+help
+help --details
 list
-todo eat dinner
-deadline finish the quiz /by Friday 4pm
-list
-todo play captains ball
-event Orbital Splashdown /from 5:30 /to 8:00 on Wednesday
+todo read book
+deadline submit assignment /by Sunday 23:59
+event CS lecture /from Monday 14:00 /to Monday 16:00
 list
 mark 1
+unmark 1
+mark 3
+delete 2
+list
+todo
+todo     
+deadline project
+event party
+deadline pay bills /by
+event dinner /from 19:00
+event dinner /from 19:00 /to
+event  /from 10am /to 11am
+mark 99
+delete -1
+delete 0
+mark 0
+mark one
+list
+todo play football
+event hackathon /from Friday 09:00 /to Friday 21:00
+deadline finish report /by 2025-08-21
+list
+help me
+help --details
+list now
+bye now
+Todo buy milk
+deadline    lots of    spaces   /by    next Friday 6pm
+event Spaced Event   /from   10:00   /to    12:00
+list    
 mark 2
-list
 unmark 2
+delete 2
 list
+deadline  /by tomorrow
+event Meeting /from  /to 13:00
+event Meeting2 /from 9:00 /to 
+list
+delete 1
+delete 1
+list
+help
 bye

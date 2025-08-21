@@ -15,65 +15,330 @@
 	What can I do for you?
 	__________________________________________________
 	__________________________________________________
+	OOPS!!! Invalid command, Type 'help' or 'help --details' for more information
+	__________________________________________________
+	__________________________________________________
+	The command must start with one of these below:
+		todo
+		deadline
+		event
+		mark
+		unmark
+		list
+		delete
+		bye
+		help
+		help --details
+	__________________________________________________
+	__________________________________________________
+	The command must have the formula as one of these below:
+		todo {description}
+			e.g.: todo Do the laundry
+
+		deadline {description} /by {date}
+			e.g.: deadline CS2103T /by Friday 16:00
+
+		event {description} /from {time} /to {time}
+			e.g.: event Orbital Splashdown /from 16:00 to 20:00 on Wednesday
+
+		mark {id}
+			e.g.: mark 2
+
+		unmark {id}
+			e.g.: unmark 3
+
+		list
+			e.g.: list
+
+		delete {id}
+			e.g.: delete 2
+
+		bye
+			e.g.: bye
+
+		help
+			e.g.: help
+
+		help --details
+			e.g.: help --details
+
+	__________________________________________________
+	__________________________________________________
 	Here are the tasks in your list:
 	__________________________________________________
 	__________________________________________________
 	Got it. I've added this task:
-		[T][ ] eat dinner
+		[T][ ] read book
 	Now you have 1 task in the list.
 	__________________________________________________
 	__________________________________________________
 	Got it. I've added this task:
-		[D][ ] finish the quiz (by: Friday 4pm)
+		[D][ ] submit assignment (by: Sunday 23:59)
+	Now you have 2 tasks in the list.
+	__________________________________________________
+	__________________________________________________
+	Got it. I've added this task:
+		[E][ ] CS lecture (from: Monday 14:00 to: Monday 16:00)
+	Now you have 3 tasks in the list.
+	__________________________________________________
+	__________________________________________________
+	Here are the tasks in your list:
+	1.[T][ ] read book
+	2.[D][ ] submit assignment (by: Sunday 23:59)
+	3.[E][ ] CS lecture (from: Monday 14:00 to: Monday 16:00)
+	__________________________________________________
+	__________________________________________________
+	Nice! I've marked this task as done:
+		[T][X] read book
+	__________________________________________________
+	__________________________________________________
+	Ok! I've marked this task as not done yet:
+		[T][ ] read book
+	__________________________________________________
+	__________________________________________________
+	Nice! I've marked this task as done:
+		[E][X] CS lecture (from: Monday 14:00 to: Monday 16:00)
+	__________________________________________________
+	__________________________________________________
+	Noted. I've removed this task:
+		[D][ ] submit assignment (by: Sunday 23:59)
 	Now you have 2 tasks in the list.
 	__________________________________________________
 	__________________________________________________
 	Here are the tasks in your list:
-	1.[T][ ] eat dinner
-	2.[D][ ] finish the quiz (by: Friday 4pm)
+	1.[T][ ] read book
+	2.[E][X] CS lecture (from: Monday 14:00 to: Monday 16:00)
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Invalid command. Perhaps, you are mentioning one of these below:
+		todo {description}
+		deadline {description} /by {date}
+		event {description} /from {time} /to {time}
+	Type 'help' or 'help --details' for more information about the valid commands
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! The description of a todo cannot be empty.
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Invalid command. Perhaps, you are mentioning one of these below:
+		todo {description}
+		deadline {description} /by {date}
+		event {description} /from {time} /to {time}
+	Type 'help' or 'help --details' for more information about the valid commands
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Invalid command. Perhaps, you are mentioning one of these below:
+		todo {description}
+		deadline {description} /by {date}
+		event {description} /from {time} /to {time}
+	Type 'help' or 'help --details' for more information about the valid commands
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Invalid command. Perhaps, you are mentioning one of these below:
+		todo {description}
+		deadline {description} /by {date}
+		event {description} /from {time} /to {time}
+	Type 'help' or 'help --details' for more information about the valid commands
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Invalid command. Perhaps, you are mentioning one of these below:
+		todo {description}
+		deadline {description} /by {date}
+		event {description} /from {time} /to {time}
+	Type 'help' or 'help --details' for more information about the valid commands
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Invalid command. Perhaps, you are mentioning one of these below:
+		todo {description}
+		deadline {description} /by {date}
+		event {description} /from {time} /to {time}
+	Type 'help' or 'help --details' for more information about the valid commands
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! The description of a event cannot be empty.
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Invalid index, task's index should be an int between 0 and 3
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Invalid command. Perhaps, you are mentioning one of these below:
+		delete {id}
+	Type 'help' or 'help --details' for more information about the valid commands
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Invalid index, task's index should be an int between 0 and 3
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Invalid index, task's index should be an int between 0 and 3
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Invalid command. Perhaps, you are mentioning one of these below:
+		mark {id}
+		unmark {id}
+	Type 'help' or 'help --details' for more information about the valid commands
+	__________________________________________________
+	__________________________________________________
+	Here are the tasks in your list:
+	1.[T][ ] read book
+	2.[E][X] CS lecture (from: Monday 14:00 to: Monday 16:00)
 	__________________________________________________
 	__________________________________________________
 	Got it. I've added this task:
-		[T][ ] play captains ball
+		[T][ ] play football
 	Now you have 3 tasks in the list.
 	__________________________________________________
 	__________________________________________________
 	Got it. I've added this task:
-		[E][ ] Orbital Splashdown (from: 5:30 to: 8:00 on Wednesday)
+		[E][ ] hackathon (from: Friday 09:00 to: Friday 21:00)
+	Now you have 4 tasks in the list.
+	__________________________________________________
+	__________________________________________________
+	Got it. I've added this task:
+		[D][ ] finish report (by: 2025-08-21)
+	Now you have 5 tasks in the list.
+	__________________________________________________
+	__________________________________________________
+	Here are the tasks in your list:
+	1.[T][ ] read book
+	2.[E][X] CS lecture (from: Monday 14:00 to: Monday 16:00)
+	3.[T][ ] play football
+	4.[E][ ] hackathon (from: Friday 09:00 to: Friday 21:00)
+	5.[D][ ] finish report (by: 2025-08-21)
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Invalid command. Perhaps, you are mentioning one of these below:
+		help
+		help --details
+	Type 'help' or 'help --details' for more information about the valid commands
+	__________________________________________________
+	__________________________________________________
+	The command must have the formula as one of these below:
+		todo {description}
+			e.g.: todo Do the laundry
+
+		deadline {description} /by {date}
+			e.g.: deadline CS2103T /by Friday 16:00
+
+		event {description} /from {time} /to {time}
+			e.g.: event Orbital Splashdown /from 16:00 to 20:00 on Wednesday
+
+		mark {id}
+			e.g.: mark 2
+
+		unmark {id}
+			e.g.: unmark 3
+
+		list
+			e.g.: list
+
+		delete {id}
+			e.g.: delete 2
+
+		bye
+			e.g.: bye
+
+		help
+			e.g.: help
+
+		help --details
+			e.g.: help --details
+
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Invalid command. Perhaps, you are mentioning one of these below:
+		list
+	Type 'help' or 'help --details' for more information about the valid commands
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Invalid command, Type 'help' or 'help --details' for more information
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Invalid command, Type 'help' or 'help --details' for more information
+	__________________________________________________
+	__________________________________________________
+	Got it. I've added this task:
+		[D][ ]    lots of    spaces   (by:    next Friday 6pm)
+	Now you have 6 tasks in the list.
+	__________________________________________________
+	__________________________________________________
+	Got it. I've added this task:
+		[E][ ] Spaced Event   (from:   10:00   to:    12:00)
+	Now you have 7 tasks in the list.
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Invalid command. Perhaps, you are mentioning one of these below:
+		list
+	Type 'help' or 'help --details' for more information about the valid commands
+	__________________________________________________
+	__________________________________________________
+	Nice! I've marked this task as done:
+		[E][X] CS lecture (from: Monday 14:00 to: Monday 16:00)
+	__________________________________________________
+	__________________________________________________
+	Ok! I've marked this task as not done yet:
+		[E][ ] CS lecture (from: Monday 14:00 to: Monday 16:00)
+	__________________________________________________
+	__________________________________________________
+	Noted. I've removed this task:
+		[E][ ] CS lecture (from: Monday 14:00 to: Monday 16:00)
+	Now you have 6 tasks in the list.
+	__________________________________________________
+	__________________________________________________
+	Here are the tasks in your list:
+	1.[T][ ] read book
+	2.[T][ ] play football
+	3.[E][ ] hackathon (from: Friday 09:00 to: Friday 21:00)
+	4.[D][ ] finish report (by: 2025-08-21)
+	5.[D][ ]    lots of    spaces   (by:    next Friday 6pm)
+	6.[E][ ] Spaced Event   (from:   10:00   to:    12:00)
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! The description of a deadline cannot be empty.
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Missing the starting time of the event
+	__________________________________________________
+	__________________________________________________
+	OOPS!!! Missing the ending time of the event
+	__________________________________________________
+	__________________________________________________
+	Here are the tasks in your list:
+	1.[T][ ] read book
+	2.[T][ ] play football
+	3.[E][ ] hackathon (from: Friday 09:00 to: Friday 21:00)
+	4.[D][ ] finish report (by: 2025-08-21)
+	5.[D][ ]    lots of    spaces   (by:    next Friday 6pm)
+	6.[E][ ] Spaced Event   (from:   10:00   to:    12:00)
+	__________________________________________________
+	__________________________________________________
+	Noted. I've removed this task:
+		[T][ ] read book
+	Now you have 5 tasks in the list.
+	__________________________________________________
+	__________________________________________________
+	Noted. I've removed this task:
+		[T][ ] play football
 	Now you have 4 tasks in the list.
 	__________________________________________________
 	__________________________________________________
 	Here are the tasks in your list:
-	1.[T][ ] eat dinner
-	2.[D][ ] finish the quiz (by: Friday 4pm)
-	3.[T][ ] play captains ball
-	4.[E][ ] Orbital Splashdown (from: 5:30 to: 8:00 on Wednesday)
+	1.[E][ ] hackathon (from: Friday 09:00 to: Friday 21:00)
+	2.[D][ ] finish report (by: 2025-08-21)
+	3.[D][ ]    lots of    spaces   (by:    next Friday 6pm)
+	4.[E][ ] Spaced Event   (from:   10:00   to:    12:00)
 	__________________________________________________
 	__________________________________________________
-	Nice! I've marked this task as done:
-		[T][X] eat dinner
-	__________________________________________________
-	__________________________________________________
-	Nice! I've marked this task as done:
-		[D][X] finish the quiz (by: Friday 4pm)
-	__________________________________________________
-	__________________________________________________
-	Here are the tasks in your list:
-	1.[T][X] eat dinner
-	2.[D][X] finish the quiz (by: Friday 4pm)
-	3.[T][ ] play captains ball
-	4.[E][ ] Orbital Splashdown (from: 5:30 to: 8:00 on Wednesday)
-	__________________________________________________
-	__________________________________________________
-	Ok! I've marked this task as not done yet:
-		[D][ ] finish the quiz (by: Friday 4pm)
-	__________________________________________________
-	__________________________________________________
-	Here are the tasks in your list:
-	1.[T][X] eat dinner
-	2.[D][ ] finish the quiz (by: Friday 4pm)
-	3.[T][ ] play captains ball
-	4.[E][ ] Orbital Splashdown (from: 5:30 to: 8:00 on Wednesday)
+	The command must start with one of these below:
+		todo
+		deadline
+		event
+		mark
+		unmark
+		list
+		delete
+		bye
+		help
+		help --details
 	__________________________________________________
 	__________________________________________________
 	Bye. Hope to see you again soon!
