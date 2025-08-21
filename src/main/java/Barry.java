@@ -49,6 +49,8 @@ public class Barry {
                     markTask(temp);
                 } else if (Pattern.matches("(todo|deadline|event) .*", temp)) {
                     addTask(temp);
+                } else if (Pattern.matches("delete (-|)[0-9]+", temp)) {
+                    deleteTask(temp);
                 } else {
                     throw BarryException.commandException();
                 }
@@ -100,6 +102,28 @@ public class Barry {
         System.out.println("\t\t" + tasksList.get(n - 1));
         System.out.println("\tNow you have " + n + (n > 1 ? " tasks " : " task ") + "in the list.");
         System.out.println("\t" + "_".repeat(50));
+    }
+
+    /**
+     * Deletes a task from the list.
+     *
+     * @param command the command string describing the task
+     */
+    public static void deleteTask(String command) throws BarryException {
+        int total = tasksList.size();
+        String[] s = command.split(" ");
+        int id = Integer.parseInt(s[1]);
+        if (id > tasksList.size() || id <= 0) {
+            throw BarryException.taskNotFound(total);
+        }
+        String deletedTask = tasksList.get(id - 1).toString();
+        System.out.println("\t" + "_".repeat(50));
+        System.out.println("\t" + "Noted. I've removed this task:");
+        tasksList.remove(id - 1);
+        System.out.println("\t\t" + deletedTask);
+        System.out.println("\tNow you have " + (total - 1) + (total - 1 > 1 ? " tasks " : " task ") + "in the list.");
+        System.out.println("\t" + "_".repeat(50));
+
     }
 
     /**
