@@ -1,3 +1,6 @@
+/**
+ * A Task has description (name) and a status, initially is false (undone).
+ */
 public class Task {
     private final String name;
     private boolean status = false;

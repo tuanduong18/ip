@@ -1,3 +1,6 @@
+/**
+ * A Deadline is a Task with description and due date.
+ */
 public class Deadline extends Task {
     private final String dueAt;
 
