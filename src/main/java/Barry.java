@@ -1,10 +1,9 @@
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class Barry {
-    private static ArrayList<Task> tasksList = new ArrayList<>();
+    private static final ArrayList<Task> taskList = new ArrayList<>();
     public static void main(String[] args) {
         greetings();
         startSession();
@@ -15,17 +14,18 @@ public class Barry {
      * Prints the greeting banner and a short introduction for the chatbot.
      */
     public static void greetings() {
-        String name = "\t$$$$$$$\\\n"
-                + "\t$$  __$$\\\n"
-                + "\t$$ |  $$ | $$$$$$\\   $$$$$$\\   $$$$$$\\  $$\\   $$\\\n"
-                + "\t$$$$$$$\\ | \\____$$\\ $$  __$$\\ $$  __$$\\ $$ |  $$ |\n"
-                + "\t$$  __$$\\  $$$$$$$ |$$ |  \\__|$$ |  \\__|$$ |  $$ |\n"
-                + "\t$$ |  $$ |$$  __$$ |$$ |      $$ |      $$ |  $$ |\n"
-                + "\t$$$$$$$  |\\$$$$$$$ |$$ |      $$ |      \\$$$$$$$ |\n"
-                + "\t\\_______/  \\_______|\\__|      \\__|       \\____$$ |\n"
-                + "\t                                        $$\\   $$ |\n"
-                + "\t                                        \\$$$$$$  |\n"
-                + "\t                                         \\______/";
+        String name = """
+                \t$$$$$$$\\
+                \t$$  __$$\\
+                \t$$ |  $$ | $$$$$$\\   $$$$$$\\   $$$$$$\\  $$\\   $$\\
+                \t$$$$$$$\\ | \\____$$\\ $$  __$$\\ $$  __$$\\ $$ |  $$ |
+                \t$$  __$$\\  $$$$$$$ |$$ |  \\__|$$ |  \\__|$$ |  $$ |
+                \t$$ |  $$ |$$  __$$ |$$ |      $$ |      $$ |  $$ |
+                \t$$$$$$$  |\\$$$$$$$ |$$ |      $$ |      \\$$$$$$$ |
+                \t\\_______/  \\_______|\\__|      \\__|       \\____$$ |
+                \t                                        $$\\   $$ |
+                \t                                        \\$$$$$$  |
+                \t                                         \\______/""";
         System.out.println("\t" + "_".repeat(50));
         System.out.println("\t" + "Hello from\n\n" + name);
         System.out.println("\t" + "What can I do for you?");
@@ -73,7 +73,7 @@ public class Barry {
             if (name.trim().isEmpty()) {
               throw BarryException.missingNameException("todo");
             }
-            tasksList.add(new Todo(name));
+            taskList.add(new Todo(name));
         } else if (Pattern.matches("deadline .* /by .*", content)) {
             String[] ss = content.substring(9).split(" /by ", 2);
             if (ss[0].trim().isEmpty()) {
@@ -81,7 +81,7 @@ public class Barry {
             } else if (ss[1].trim().isEmpty()) {
                 throw BarryException.missingTimestamp(ss[0], "deadline", "due date");
             }
-            tasksList.add(new Deadline(ss[0], ss[1]));
+            taskList.add(new Deadline(ss[0], ss[1]));
         } else if ((Pattern.matches("event .* /from .* /to .*", content))) {
             String[] s1 = content.substring(6).split(" /from ", 2);
             String[] s2 = s1[1].split(" /to ", 2);
@@ -92,14 +92,14 @@ public class Barry {
             } else if (s2[1].trim().isEmpty()) {
                 throw BarryException.missingTimestamp(s1[0], "event", "ending time");
             }
-            tasksList.add(new Event(s1[0], s2[0], s2[1]));
+            taskList.add(new Event(s1[0], s2[0], s2[1]));
         } else {
             throw BarryException.commandException();
         }
         System.out.println("\t" + "_".repeat(50));
-        int n = tasksList.size();
+        int n = taskList.size();
         System.out.println("\t" + "Got it. I've added this task:");
-        System.out.println("\t\t" + tasksList.get(n - 1));
+        System.out.println("\t\t" + taskList.get(n - 1));
         System.out.println("\tNow you have " + n + (n > 1 ? " tasks " : " task ") + "in the list.");
         System.out.println("\t" + "_".repeat(50));
     }
@@ -110,16 +110,16 @@ public class Barry {
      * @param command the command string describing the task
      */
     public static void deleteTask(String command) throws BarryException {
-        int total = tasksList.size();
+        int total = taskList.size();
         String[] s = command.split(" ");
         int id = Integer.parseInt(s[1]);
-        if (id > tasksList.size() || id <= 0) {
+        if (id > taskList.size() || id <= 0) {
             throw BarryException.taskNotFound(total);
         }
-        String deletedTask = tasksList.get(id - 1).toString();
+        String deletedTask = taskList.get(id - 1).toString();
         System.out.println("\t" + "_".repeat(50));
         System.out.println("\t" + "Noted. I've removed this task:");
-        tasksList.remove(id - 1);
+        taskList.remove(id - 1);
         System.out.println("\t\t" + deletedTask);
         System.out.println("\tNow you have " + (total - 1) + (total - 1 > 1 ? " tasks " : " task ") + "in the list.");
         System.out.println("\t" + "_".repeat(50));
@@ -132,33 +132,33 @@ public class Barry {
      * @param command the user input containing the action and task index
      */
     public static void markTask(String command) throws BarryException {
-        int total = tasksList.size();
+        int total = taskList.size();
         String[] s = command.split(" ");
         String mark = s[0];
         int id = Integer.parseInt(s[1]);
-        if (id > tasksList.size() || id <= 0) {
+        if (id > taskList.size() || id <= 0) {
             throw BarryException.taskNotFound(total);
         } else {
             System.out.println("\t" + "_".repeat(50));
-            tasksList.get(id - 1).setStatus(mark.equals("mark"));
+            taskList.get(id - 1).setStatus(mark.equals("mark"));
             if (mark.equals("mark")) {
                 System.out.println("\t" + "Nice! I've marked this task as done:");
             } else {
                 System.out.println("\t" + "Ok! I've marked this task as not done yet:");
             }
-            System.out.println("\t\t" + tasksList.get(id - 1));
+            System.out.println("\t\t" + taskList.get(id - 1));
             System.out.println("\t" + "_".repeat(50));
         }
     }
 
     /**
-     * Prints all tasks currently stored in tasksList, with their status and index.
+     * Prints all tasks currently stored in taskList, with their status and index.
      */
     public static void printList() {
         System.out.println("\t" + "_".repeat(50));
         System.out.println("\tHere are the tasks in your list:");
         int i = 1;
-        for (Task item : tasksList) {
+        for (Task item : taskList) {
             System.out.println("\t" + i + "." + item.toString());
             i++;
         }
