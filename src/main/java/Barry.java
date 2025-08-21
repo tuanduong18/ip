@@ -40,19 +40,42 @@ public class Barry {
         while(true) {
             try {
                 String temp = scan.nextLine();
-                if (temp.equals("bye")) {
-                    System.out.println("\t" + "_".repeat(50));
-                    break;
-                } else if (temp.equals("list")) {
-                    printList();
-                } else if (Pattern.matches("(mark|unmark) (-|)[0-9]+", temp)) {
-                    markTask(temp);
-                } else if (Pattern.matches("(todo|deadline|event) .*", temp)) {
-                    addTask(temp);
-                } else if (Pattern.matches("delete (-|)[0-9]+", temp)) {
-                    deleteTask(temp);
-                } else {
-                    throw BarryException.commandException();
+                String tag = temp.split(" ")[0];
+                switch (Command.parseCommand(tag)) {
+                    case TODO:
+                    case DEADLINE:
+                    case EVENT:
+                        addTask(temp);
+                        break;
+
+                    case MARK:
+                    case UNMARK:
+                        markTask(temp);
+                        break;
+
+                    case DELETE:
+                        deleteTask(temp);
+                        break;
+
+                    case LIST:
+                        printList(temp);
+                        break;
+
+                    case BYE:
+                        if(temp.equals("bye")) {
+                            System.out.println("\t" + "_".repeat(50));
+                            return;
+                        } else {
+                            throw BarryException.commandException();
+                        }
+
+                    case HELP:
+                    case DETAILED_HELP:
+                        printHelp(temp);
+                        break;
+
+                    default:
+                        throw BarryException.commandException();
                 }
             } catch (BarryException e) {
                 System.out.println("\t" + "_".repeat(50));
@@ -71,30 +94,30 @@ public class Barry {
         if (Pattern.matches("todo .*", content)) {
             String name = content.substring(5);
             if (name.trim().isEmpty()) {
-              throw BarryException.missingNameException("todo");
+              throw BarryException.missingNameException(Command.TODO);
             }
             taskList.add(new Todo(name));
         } else if (Pattern.matches("deadline .* /by .*", content)) {
             String[] ss = content.substring(9).split(" /by ", 2);
             if (ss[0].trim().isEmpty()) {
-                throw BarryException.missingNameException("deadline");
+                throw BarryException.missingNameException(Command.DEADLINE);
             } else if (ss[1].trim().isEmpty()) {
-                throw BarryException.missingTimestamp(ss[0], "deadline", "due date");
+                throw BarryException.missingTimestamp(Command.DEADLINE, "due date");
             }
             taskList.add(new Deadline(ss[0], ss[1]));
         } else if ((Pattern.matches("event .* /from .* /to .*", content))) {
             String[] s1 = content.substring(6).split(" /from ", 2);
             String[] s2 = s1[1].split(" /to ", 2);
             if (s1[0].trim().isEmpty()) {
-                throw BarryException.missingNameException("event");
+                throw BarryException.missingNameException(Command.EVENT);
             } else if (s2[0].trim().isEmpty()) {
-                throw BarryException.missingTimestamp(s1[0], "event", "starting time");
+                throw BarryException.missingTimestamp(Command.EVENT, "starting time");
             } else if (s2[1].trim().isEmpty()) {
-                throw BarryException.missingTimestamp(s1[0], "event", "ending time");
+                throw BarryException.missingTimestamp(Command.EVENT, "ending time");
             }
             taskList.add(new Event(s1[0], s2[0], s2[1]));
         } else {
-            throw BarryException.commandException();
+            throw BarryException.commandException(new Command[]{Command.TODO, Command.DEADLINE, Command.EVENT});
         }
         System.out.println("\t" + "_".repeat(50));
         int n = taskList.size();
@@ -110,6 +133,9 @@ public class Barry {
      * @param command the command string describing the task
      */
     public static void deleteTask(String command) throws BarryException {
+        if (!(Pattern.matches("delete [0-9]+", command))) {
+            throw BarryException.commandException(new Command[]{Command.DELETE});
+        }
         int total = taskList.size();
         String[] s = command.split(" ");
         int id = Integer.parseInt(s[1]);
@@ -132,6 +158,9 @@ public class Barry {
      * @param command the user input containing the action and task index
      */
     public static void markTask(String command) throws BarryException {
+        if (!(Pattern.matches("(mark|unmark) [0-9]+", command))) {
+            throw BarryException.commandException(new Command[]{Command.MARK, Command.UNMARK});
+        }
         int total = taskList.size();
         String[] s = command.split(" ");
         String mark = s[0];
@@ -154,13 +183,32 @@ public class Barry {
     /**
      * Prints all tasks currently stored in taskList, with their status and index.
      */
-    public static void printList() {
+    public static void printList(String command) throws BarryException {
+        if (!command.equals("list")) {
+            throw BarryException.commandException(new Command[]{Command.LIST});
+        }
         System.out.println("\t" + "_".repeat(50));
         System.out.println("\tHere are the tasks in your list:");
         int i = 1;
         for (Task item : taskList) {
             System.out.println("\t" + i + "." + item.toString());
             i++;
+        }
+        System.out.println("\t" + "_".repeat(50));
+    }
+
+    public static void printHelp(String s) throws BarryException{
+        if (!s.equals("help") && !s.equals("help --details"))  {
+            throw BarryException.commandException(new Command[]{Command.HELP, Command.DETAILED_HELP});
+        }
+
+        System.out.println("\t" + "_".repeat(50));
+        if (s.equals("help")) {
+            System.out.println("\tThe command must start with one of these below:");
+            System.out.print(Command.allCommands());
+        } else {
+            System.out.println("\tThe command must have the formula as one of these below:");
+            System.out.print(Command.allCommandsDetailed());
         }
         System.out.println("\t" + "_".repeat(50));
     }
