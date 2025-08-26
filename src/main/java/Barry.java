@@ -1,14 +1,122 @@
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Barry {
     private static final ArrayList<Task> taskList = new ArrayList<>();
     public static void main(String[] args) {
         greetings();
+		fetchData();
         startSession();
         endSession();
     }
+
+	public static void fetchData() {
+		Path path = Paths.get("data", "Barry.txt");
+		File f = path.toFile();
+		try {
+			Scanner s = new Scanner(f);
+			while (s.hasNextLine()) {
+				String temp = s.nextLine();
+				String[] cmd = temp.split(" \\| ", 5);
+				try {
+					String type = cmd[0];
+					String marked = cmd[1];
+					String name = cmd[2];
+					switch (type) {
+					case "T":
+						taskList.add(new Todo(name));
+						break;
+					case "D":
+						String by = cmd[3];
+						taskList.add(new Deadline(name, by));
+						break;
+					case "E":
+						String start = cmd[3];
+						String end = cmd[4];
+						taskList.add(new Event(name, start, end));
+						break;
+					}
+					taskList.get(taskList.toArray().length - 1).setStatus(marked.equals("1"));
+
+				} catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+					continue;
+				}
+			}
+		} catch (FileNotFoundException e) {
+			try{
+
+				f.getParentFile().mkdirs(); // make sure "data" folder exists
+				f.createNewFile();
+
+			} catch (IOException ee) {
+				ee.printStackTrace();
+			}
+
+		}
+
+	}
+
+	public static void saveData() {
+		StringBuilder s = new StringBuilder();
+		for (Task task : taskList) {
+			String t = task.toString();
+			char type = t.charAt(1);
+			boolean marked = t.charAt(4) == 'X';
+			String command = t.substring(7);
+			switch (type) {
+			case 'T':
+				s.append(type);
+				s.append(" | ");
+				s.append(marked ? "1" : "0");
+				s.append(" | ");
+				s.append(command);
+				s.append(System.lineSeparator());
+				break;
+			case 'D':
+				String[] details = command.split(" \\(by: " , 2);
+				s.append(type);
+				s.append(" | ");
+				s.append(marked ? "1" : "0");
+				s.append(" | ");
+				s.append(details[0]);
+				s.append(" | ");
+				s.append(details[1], 0, details[1].length() - 1);
+				s.append(System.lineSeparator());
+				break;
+			case 'E':
+				String name = command.split(" \\(from: ", 2)[0];
+				String start = command.split(" \\(from: ", 2)[1].split(" to: ", 2)[0];
+				String end = command.split(" \\(from: ", 2)[1].split(" to: ", 2)[1];
+				s.append(type);
+				s.append(" | ");
+				s.append(marked ? "1" : "0");
+				s.append(" | ");
+				s.append(name);
+				s.append(" | ");
+				s.append(start);
+				s.append(" | ");
+				s.append(end, 0, end.length() - 1);
+				s.append(System.lineSeparator());
+				break;
+			}
+		}
+		try {
+			Path path = Paths.get("data", "Barry.txt");
+			File f = path.toFile();
+			FileWriter fw = new FileWriter(f);
+			fw.write(s.toString());
+			fw.close();
+		} catch (IOException e) {
+			System.out.println("Something went wrong: " + e.getMessage());
+		}
+	}
 
     /**
      * Prints the greeting banner and a short introduction for the chatbot.
@@ -77,6 +185,7 @@ public class Barry {
                 default:
                     throw BarryException.commandException();
                 }
+				saveData();
             } catch (BarryException e) {
                 System.out.println("\t" + "_".repeat(50));
                 System.out.println("\t" + "OOPS!!! " + e.getMessage());
@@ -91,13 +200,13 @@ public class Barry {
      * @param content the command string describing the task
      */
     public static void addTask(String content) throws BarryException {
-        if (Pattern.matches("todo .*", content)) {
+        if (Pattern.matches("todo [^|]*", content)) {
             String name = content.substring(5);
             if (name.trim().isEmpty()) {
               throw BarryException.missingNameException(Command.TODO);
             }
             taskList.add(new Todo(name));
-        } else if (Pattern.matches("deadline .* /by .*", content)) {
+        } else if (Pattern.matches("deadline [^|]* /by [^|]*", content)) {
             String[] ss = content.substring(9).split(" /by ", 2);
             if (ss[0].trim().isEmpty()) {
                 throw BarryException.missingNameException(Command.DEADLINE);
@@ -105,7 +214,7 @@ public class Barry {
                 throw BarryException.missingTimestamp(Command.DEADLINE, "due date");
             }
             taskList.add(new Deadline(ss[0], ss[1]));
-        } else if ((Pattern.matches("event .* /from .* /to .*", content))) {
+        } else if ((Pattern.matches("event [^|]* /from [^|]* /to [^|]*", content))) {
             String[] s1 = content.substring(6).split(" /from ", 2);
             String[] s2 = s1[1].split(" /to ", 2);
             if (s1[0].trim().isEmpty()) {

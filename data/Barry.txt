@@ -1,0 +1,3 @@
+T | 1 | a
+D | 0 | b | 2pm
+E | 0 | orbital splashdown | 5pm | 8pm
