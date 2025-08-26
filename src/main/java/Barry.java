@@ -42,40 +42,40 @@ public class Barry {
                 String temp = scan.nextLine();
                 String tag = temp.split(" ")[0];
                 switch (Command.parseCommand(tag)) {
-                    case TODO:
-                    case DEADLINE:
-                    case EVENT:
-                        addTask(temp);
-                        break;
+                case TODO:
+                case DEADLINE:
+                case EVENT:
+                    addTask(temp);
+                    break;
 
-                    case MARK:
-                    case UNMARK:
-                        markTask(temp);
-                        break;
+                case MARK:
+                case UNMARK:
+                    markTask(temp);
+                    break;
 
-                    case DELETE:
-                        deleteTask(temp);
-                        break;
+                case DELETE:
+                    deleteTask(temp);
+                    break;
 
-                    case LIST:
-                        printList(temp);
-                        break;
+                case LIST:
+                    printList(temp);
+                    break;
 
-                    case BYE:
-                        if(temp.equals("bye")) {
-                            System.out.println("\t" + "_".repeat(50));
-                            return;
-                        } else {
-                            throw BarryException.commandException();
-                        }
-
-                    case HELP:
-                    case DETAILED_HELP:
-                        printHelp(temp);
-                        break;
-
-                    default:
+                case BYE:
+                    if(temp.equals("bye")) {
+                        System.out.println("\t" + "_".repeat(50));
+                        return;
+                    } else {
                         throw BarryException.commandException();
+                    }
+
+                case HELP:
+                case DETAILED_HELP:
+                    printHelp(temp);
+                    break;
+
+                default:
+                    throw BarryException.commandException();
                 }
             } catch (BarryException e) {
                 System.out.println("\t" + "_".repeat(50));
