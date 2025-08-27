@@ -1,5 +1,8 @@
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -7,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+
 
 public class Barry {
     private static final ArrayList<Task> taskList = new ArrayList<>();
@@ -35,7 +39,9 @@ public class Barry {
 						break;
 					case "D":
 						String by = cmd[3];
-						taskList.add(new Deadline(name, by));
+						DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+						LocalDateTime due = LocalDateTime.parse(by, formatter);
+						taskList.add(new Deadline(name, due));
 						break;
 					case "E":
 						String start = cmd[3];
@@ -212,7 +218,14 @@ public class Barry {
             } else if (ss[1].trim().isEmpty()) {
                 throw BarryException.missingTimestamp(Command.DEADLINE, "due date");
             }
-            taskList.add(new Deadline(ss[0], ss[1]));
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+	        LocalDateTime due;
+	        try {
+		        due = LocalDateTime.parse(ss[1].trim(), formatter);
+	        } catch (DateTimeParseException e) {
+		        throw BarryException.invalidTimestamp(Command.DEADLINE, "due date", "dd/MM/yyyy HH:mm");
+	        }
+	        taskList.add(new Deadline(ss[0], due));
         } else if ((Pattern.matches("event [^|]* /from [^|]* /to [^|]*", content))) {
             String[] s1 = content.substring(6).split(" /from ", 2);
             String[] s2 = s1[1].split(" /to ", 2);

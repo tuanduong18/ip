@@ -29,4 +29,8 @@ public class BarryException extends  Exception {
     public static BarryException taskNotFound(int total) {
         return new BarryException("Invalid index, task's index should be an int between 0 and " + (total + 1));
     }
+
+	public static BarryException invalidTimestamp(Command c, String s, String regx) {
+		return new BarryException("Invalid time format of the " + c.getType() + "'s " + s + ". It should be " + regx);
+	}
 }
