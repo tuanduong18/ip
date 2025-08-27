@@ -1,16 +1,21 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * A Deadline is a Task with description and due date.
  */
 public class Deadline extends Task {
-    private final String dueAt;
+    private final LocalDateTime dueAt;
 
-    public Deadline(String name, String dueAt) {
+    public Deadline(String name, LocalDateTime dueAt) {
         super(name);
         this.dueAt = dueAt;
     }
 
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + dueAt +")";
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm a d MMM, yyyy");
+	    String formatted = dueAt.format(formatter);
+		return "[D]" + super.toString() + " (by: " + formatted +")";
     }
 }
