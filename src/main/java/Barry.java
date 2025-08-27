@@ -92,7 +92,12 @@ public class Barry {
 				s.append(" | ");
 				s.append(details[0]);
 				s.append(" | ");
-				s.append(details[1], 0, details[1].length() - 1);
+				DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("h:mm a d MMM, yyyy");
+				DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+				String due = details[1].substring(0, details[1].length() - 1);
+				LocalDateTime dueParsed = LocalDateTime.parse(due, formatter1);
+				due = dueParsed.format(formatter2);
+				s.append(due);
 				s.append(System.lineSeparator());
 				break;
 			case 'E':
