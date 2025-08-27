@@ -18,7 +18,7 @@ public class Barry {
     }
 
 	public static void fetchData() {
-		Path path = Paths.get("data", "Barry.txt");
+		Path path = Paths.get("..","data", "Barry.txt");
 		File f = path.toFile();
 		try {
 			Scanner s = new Scanner(f);
@@ -51,7 +51,6 @@ public class Barry {
 			}
 		} catch (FileNotFoundException e) {
 			try{
-
 				f.getParentFile().mkdirs(); // make sure "data" folder exists
 				f.createNewFile();
 
@@ -108,7 +107,7 @@ public class Barry {
 			}
 		}
 		try {
-			Path path = Paths.get("data", "Barry.txt");
+			Path path = Paths.get("..","data", "Barry.txt");
 			File f = path.toFile();
 			FileWriter fw = new FileWriter(f);
 			fw.write(s.toString());
