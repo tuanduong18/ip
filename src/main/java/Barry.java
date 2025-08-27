@@ -29,6 +29,7 @@ public class Barry {
 			while (s.hasNextLine()) {
 				String temp = s.nextLine();
 				String[] cmd = temp.split(" \\| ", 5);
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 				try {
 					String type = cmd[0];
 					String marked = cmd[1];
@@ -39,13 +40,12 @@ public class Barry {
 						break;
 					case "D":
 						String by = cmd[3];
-						DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 						LocalDateTime due = LocalDateTime.parse(by, formatter);
 						taskList.add(new Deadline(name, due));
 						break;
 					case "E":
-						String start = cmd[3];
-						String end = cmd[4];
+						LocalDateTime start = LocalDateTime.parse(cmd[3], formatter);
+						LocalDateTime end = LocalDateTime.parse(cmd[4], formatter);
 						taskList.add(new Event(name, start, end));
 						break;
 					}
@@ -75,6 +75,8 @@ public class Barry {
 			char type = t.charAt(1);
 			boolean marked = t.charAt(4) == 'X';
 			String command = t.substring(7);
+			DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("h:mm a d MMM, yyyy");
+			DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 			switch (type) {
 			case 'T':
 				s.append(type);
@@ -92,8 +94,6 @@ public class Barry {
 				s.append(" | ");
 				s.append(details[0]);
 				s.append(" | ");
-				DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("h:mm a d MMM, yyyy");
-				DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 				String due = details[1].substring(0, details[1].length() - 1);
 				LocalDateTime dueParsed = LocalDateTime.parse(due, formatter1);
 				due = dueParsed.format(formatter2);
@@ -104,6 +104,9 @@ public class Barry {
 				String name = command.split(" \\(from: ", 2)[0];
 				String start = command.split(" \\(from: ", 2)[1].split(" to: ", 2)[0];
 				String end = command.split(" \\(from: ", 2)[1].split(" to: ", 2)[1];
+				end = end.substring(0, end.length() - 1);
+				start = LocalDateTime.parse(start, formatter1).format(formatter2);
+				end = LocalDateTime.parse(end, formatter1).format(formatter2);
 				s.append(type);
 				s.append(" | ");
 				s.append(marked ? "1" : "0");
@@ -112,7 +115,7 @@ public class Barry {
 				s.append(" | ");
 				s.append(start);
 				s.append(" | ");
-				s.append(end, 0, end.length() - 1);
+				s.append(end);
 				s.append(System.lineSeparator());
 				break;
 			}
@@ -241,7 +244,19 @@ public class Barry {
             } else if (s2[1].trim().isEmpty()) {
                 throw BarryException.missingTimestamp(Command.EVENT, "ending time");
             }
-            taskList.add(new Event(s1[0], s2[0], s2[1]));
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+	        LocalDateTime start, end;
+	        try {
+		        start = LocalDateTime.parse(s2[0].trim(), formatter);
+	        } catch (DateTimeParseException e) {
+		        throw BarryException.invalidTimestamp(Command.EVENT, "start time", "dd/MM/yyyy HH:mm");
+	        }
+			try {
+		        end = LocalDateTime.parse(s2[1].trim(), formatter);
+	        } catch (DateTimeParseException e) {
+		        throw BarryException.invalidTimestamp(Command.EVENT, "end time", "dd/MM/yyyy HH:mm");
+	        }
+            taskList.add(new Event(s1[0], start, end));
         } else {
             throw BarryException.commandException(new Command[]{Command.TODO, Command.DEADLINE, Command.EVENT});
         }
