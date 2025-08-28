@@ -1,7 +1,9 @@
+package tasks;
+
 /**
- * A Todo is a Task with description only.
+ * A tasks.Todo is a tasks.Task with description only.
  */
-class Todo extends Task {
+public class Todo extends Task {
     public Todo(String name) {
         super(name);
     }

@@ -1,3 +1,7 @@
+package commands;
+
+import data.exceptions.BarryException;
+
 public enum CommandType {
     TODO("todo",
             "todo {description}",
@@ -39,7 +43,7 @@ public enum CommandType {
     public static String allCommands() {
         StringBuilder s = new StringBuilder("");
         for (CommandType c : CommandType.values()) {
-            s.append("\t\t");
+            s.append("\t");
             s.append(c.getType());
             s.append("\n");
         }
@@ -49,10 +53,10 @@ public enum CommandType {
     public static String allCommandsDetailed() {
         StringBuilder s = new StringBuilder("");
         for (CommandType c : CommandType.values()) {
-            s.append("\t\t");
+            s.append("\t");
             s.append(c.getFormula());
             s.append("\n");
-            s.append("\t\t\te.g.: ");
+            s.append("\t\te.g.: ");
             s.append(c.getExample());
             s.append("\n\n");
         }

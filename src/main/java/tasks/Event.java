@@ -1,10 +1,12 @@
+package tasks;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * An Event is a Task with description, starting time and ending time.
+ * An tasks.Event is a tasks.Task with description, starting time and ending time.
  */
-class Event extends Task{
+public class Event extends Task {
     private final LocalDateTime start;
     private final LocalDateTime end;
 

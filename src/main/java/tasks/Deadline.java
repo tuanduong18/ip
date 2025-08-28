@@ -1,8 +1,10 @@
+package tasks;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * A Deadline is a Task with description and due date.
+ * A tasks.Deadline is a tasks.Task with description and due date.
  */
 public class Deadline extends Task {
     private final LocalDateTime dueAt;

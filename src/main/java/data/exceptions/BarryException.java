@@ -1,3 +1,7 @@
+package data.exceptions;
+
+import commands.CommandType;
+
 public class BarryException extends  Exception {
     BarryException(String message) {
         super(message);
@@ -7,9 +11,9 @@ public class BarryException extends  Exception {
         return new BarryException("Invalid command, Type 'help' or 'help --details' for more information");
     }
 
-    public static BarryException commandException(Command[] cmds) {
+    public static BarryException commandException(CommandType[] cmds) {
         StringBuilder s = new StringBuilder("Invalid command. Perhaps, you are mentioning one of these below:\n");
-        for (Command cmd: cmds) {
+        for (CommandType cmd: cmds) {
             s.append("\t\t");
             s.append(cmd.getFormula());
             s.append("\n");
@@ -18,11 +22,11 @@ public class BarryException extends  Exception {
         return new BarryException(s.toString());
     }
 
-    public static BarryException missingNameException(Command c) {
+    public static BarryException missingNameException(CommandType c) {
         return new BarryException("The description of a " + c.getType() + " cannot be empty.");
     }
 
-    public static BarryException missingTimestamp(Command c, String attr) {
+    public static BarryException missingTimestamp(CommandType c, String attr) {
         return new BarryException("Missing the " + attr + " of the " + c.getType());
     }
 
@@ -30,7 +34,7 @@ public class BarryException extends  Exception {
         return new BarryException("Invalid index, task's index should be an int between 0 and " + (total + 1));
     }
 
-	public static BarryException invalidTimestamp(Command c, String s, String regx) {
+	public static BarryException invalidTimestamp(CommandType c, String s, String regx) {
 		return new BarryException("Invalid time format of the " + c.getType() + "'s " + s + ". It should be " + regx);
 	}
 }

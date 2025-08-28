@@ -1,8 +1,17 @@
+import commands.CommandType;
+import data.TaskList;
+import data.exceptions.BarryException;
+import parser.Parser;
+import tasks.Deadline;
+import tasks.Event;
+import tasks.Task;
+import tasks.Todo;
+import ui.Ui;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -20,9 +29,12 @@ public class Barry {
 	// Store all tasks in the session
 	private final TaskList allTask;
 
+	private final Parser parser;
+
 	public Barry() {
 		this.ui = new Ui();
 		this.allTask = new TaskList();
+		this.parser = new Parser();
 	}
 
 	public void run() {
@@ -159,7 +171,7 @@ public class Barry {
                 case TODO:
                 case DEADLINE:
                 case EVENT:
-                    addTask(temp);
+	                ui.print(parser.parseTask(temp, allTask));
                     break;
 
                 case MARK:
@@ -192,74 +204,10 @@ public class Barry {
                 }
             } catch (BarryException e) {
 				ArrayList<String> s = new ArrayList<>();
-				s.add("OOPS!!!");
-				s.add(e.getMessage());
+				s.add("OOPS!!! " + e.getMessage());
                 ui.print(s);
             }
         }
-    }
-
-    /**
-     * Adds a new task to the list.
-     *
-     * @param content the command string describing the task
-     */
-    public void addTask(String content) throws BarryException {
-		Task temp;
-        if (Pattern.matches("todo [^|]*", content)) {
-            String name = content.substring(5);
-            if (name.trim().isEmpty()) {
-              throw BarryException.missingNameException(CommandType.TODO);
-            }
-			temp = new Todo(name);
-        } else if (Pattern.matches("deadline [^|]* /by [^|]*", content)) {
-            String[] ss = content.substring(9).split(" /by ", 2);
-            if (ss[0].trim().isEmpty()) {
-                throw BarryException.missingNameException(CommandType.DEADLINE);
-            } else if (ss[1].trim().isEmpty()) {
-                throw BarryException.missingTimestamp(CommandType.DEADLINE, "due date");
-            }
-	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-	        LocalDateTime due;
-	        try {
-		        due = LocalDateTime.parse(ss[1].trim(), formatter);
-	        } catch (DateTimeParseException e) {
-		        throw BarryException.invalidTimestamp(CommandType.DEADLINE, "due date", "dd/MM/yyyy HH:mm");
-	        }
-	        temp = new Deadline(ss[0], due);
-        } else if ((Pattern.matches("event [^|]* /from [^|]* /to [^|]*", content))) {
-            String[] s1 = content.substring(6).split(" /from ", 2);
-            String[] s2 = s1[1].split(" /to ", 2);
-            if (s1[0].trim().isEmpty()) {
-                throw BarryException.missingNameException(CommandType.EVENT);
-            } else if (s2[0].trim().isEmpty()) {
-                throw BarryException.missingTimestamp(CommandType.EVENT, "starting time");
-            } else if (s2[1].trim().isEmpty()) {
-                throw BarryException.missingTimestamp(CommandType.EVENT, "ending time");
-            }
-	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-	        LocalDateTime start, end;
-	        try {
-		        start = LocalDateTime.parse(s2[0].trim(), formatter);
-	        } catch (DateTimeParseException e) {
-		        throw BarryException.invalidTimestamp(CommandType.EVENT, "start time", "dd/MM/yyyy HH:mm");
-	        }
-			try {
-		        end = LocalDateTime.parse(s2[1].trim(), formatter);
-	        } catch (DateTimeParseException e) {
-		        throw BarryException.invalidTimestamp(CommandType.EVENT, "end time", "dd/MM/yyyy HH:mm");
-	        }
-	        temp = new Event(s1[0], start, end);
-        } else {
-            throw BarryException.commandException(new CommandType[]{CommandType.TODO, CommandType.DEADLINE, CommandType.EVENT});
-        }
-		allTask.addTask(temp);
-	    int n = allTask.size();
-		ArrayList<String> s = new ArrayList<>();
-		s.add("Got it. I've added this task:");
-		s.add("\t" + temp.toString());
-		s.add("Now you have " + n + (n > 1 ? " tasks " : " task ") + "in the list.");
-        ui.print(s);
     }
 
     /**

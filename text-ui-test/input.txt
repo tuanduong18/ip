@@ -33,9 +33,9 @@ help me
 help --details
 list now
 bye now
-Todo buy milk
+tasks.Todo buy milk
 deadline    lots of    spaces   /by    next Friday 6pm
-event Spaced Event   /from   10:00   /to    12:00
+event Spaced tasks.Event   /from   10:00   /to    12:00
 list    
 mark 2
 unmark 2
