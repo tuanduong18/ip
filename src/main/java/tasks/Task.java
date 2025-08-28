@@ -1,5 +1,7 @@
+package tasks;
+
 /**
- * A Task has description (name) and a status, initially is false (undone).
+ * A tasks.Task has description (name) and a status, initially is false (undone).
  */
 public class Task {
     private final String name;
