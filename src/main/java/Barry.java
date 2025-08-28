@@ -13,13 +13,16 @@ import java.io.IOException;
 
 
 public class Barry {
-    private final ArrayList<Task> taskList = new ArrayList<>();
 
+	// Print messages from Barry
 	private final Ui ui;
+
+	// Store all tasks in the session
+	private final TaskList allTask;
 
 	public Barry() {
 		this.ui = new Ui();
-
+		this.allTask = new TaskList();
 	}
 
 	public void run() {
@@ -49,20 +52,20 @@ public class Barry {
 					String name = cmd[2];
 					switch (type) {
 					case "T":
-						taskList.add(new Todo(name));
+						allTask.addTask(new Todo(name));
 						break;
 					case "D":
 						String by = cmd[3];
 						LocalDateTime due = LocalDateTime.parse(by, formatter);
-						taskList.add(new Deadline(name, due));
+						allTask.addTask(new Deadline(name, due));
 						break;
 					case "E":
 						LocalDateTime start = LocalDateTime.parse(cmd[3], formatter);
 						LocalDateTime end = LocalDateTime.parse(cmd[4], formatter);
-						taskList.add(new Event(name, start, end));
+						allTask.addTask(new Event(name, start, end));
 						break;
 					}
-					taskList.get(taskList.toArray().length - 1).setStatus(marked.equals("1"));
+					allTask.markTask(allTask.size() - 1, marked.equals("1"));
 
 				} catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
 					continue;
@@ -83,8 +86,7 @@ public class Barry {
 
 	public void saveData() {
 		StringBuilder s = new StringBuilder();
-		for (Task task : taskList) {
-			String t = task.toString();
+		for (String t : allTask.listTasks()) {
 			char type = t.charAt(1);
 			boolean marked = t.charAt(4) == 'X';
 			String command = t.substring(7);
@@ -188,7 +190,6 @@ public class Barry {
                 default:
                     throw BarryException.commandException();
                 }
-				saveData();
             } catch (BarryException e) {
 				ArrayList<String> s = new ArrayList<>();
 				s.add("OOPS!!!");
@@ -204,12 +205,13 @@ public class Barry {
      * @param content the command string describing the task
      */
     public void addTask(String content) throws BarryException {
+		Task temp;
         if (Pattern.matches("todo [^|]*", content)) {
             String name = content.substring(5);
             if (name.trim().isEmpty()) {
               throw BarryException.missingNameException(CommandType.TODO);
             }
-            taskList.add(new Todo(name));
+			temp = new Todo(name);
         } else if (Pattern.matches("deadline [^|]* /by [^|]*", content)) {
             String[] ss = content.substring(9).split(" /by ", 2);
             if (ss[0].trim().isEmpty()) {
@@ -224,7 +226,7 @@ public class Barry {
 	        } catch (DateTimeParseException e) {
 		        throw BarryException.invalidTimestamp(CommandType.DEADLINE, "due date", "dd/MM/yyyy HH:mm");
 	        }
-	        taskList.add(new Deadline(ss[0], due));
+	        temp = new Deadline(ss[0], due);
         } else if ((Pattern.matches("event [^|]* /from [^|]* /to [^|]*", content))) {
             String[] s1 = content.substring(6).split(" /from ", 2);
             String[] s2 = s1[1].split(" /to ", 2);
@@ -247,15 +249,16 @@ public class Barry {
 	        } catch (DateTimeParseException e) {
 		        throw BarryException.invalidTimestamp(CommandType.EVENT, "end time", "dd/MM/yyyy HH:mm");
 	        }
-            taskList.add(new Event(s1[0], start, end));
+	        temp = new Event(s1[0], start, end);
         } else {
             throw BarryException.commandException(new CommandType[]{CommandType.TODO, CommandType.DEADLINE, CommandType.EVENT});
         }
-	    int n = taskList.size();
+		allTask.addTask(temp);
+	    int n = allTask.size();
 		ArrayList<String> s = new ArrayList<>();
 		s.add("Got it. I've added this task:");
-		s.add("\t" + taskList.get(n - 1));
-		s.add("Now you have \" + n + (n > 1 ? \" tasks \" : \" task \") + \"in the list.");
+		s.add("\t" + temp.toString());
+		s.add("Now you have " + n + (n > 1 ? " tasks " : " task ") + "in the list.");
         ui.print(s);
     }
 
@@ -268,18 +271,17 @@ public class Barry {
         if (!(Pattern.matches("delete [0-9]+", command))) {
             throw BarryException.commandException(new CommandType[]{CommandType.DELETE});
         }
-        int total = taskList.size();
+        int total = allTask.size();
         String[] ss = command.split(" ");
         int id = Integer.parseInt(ss[1]);
-        if (id > taskList.size() || id <= 0) {
+        if (id > allTask.size() || id <= 0) {
             throw BarryException.taskNotFound(total);
         }
-	    String deletedTask = taskList.get(id - 1).toString();
+	    String deletedTask = allTask.deleteTask(id).toString();
 		ArrayList<String> s = new ArrayList<>();
 		s.add("Noted. I've removed this task:");
 		s.add("\t" + deletedTask);
 		s.add("Now you have " + (total - 1) + (total - 1 > 1 ? " tasks " : " task ") + "in the list.");
-        taskList.remove(id - 1);
 		ui.print(s);
     }
 
@@ -292,21 +294,21 @@ public class Barry {
         if (!(Pattern.matches("(mark|unmark) [0-9]+", command))) {
             throw BarryException.commandException(new CommandType[]{CommandType.MARK, CommandType.UNMARK});
         }
-        int total = taskList.size();
+        int total = allTask.size();
         String[] ss = command.split(" ");
         String mark = ss[0];
         int id = Integer.parseInt(ss[1]);
-        if (id > taskList.size() || id <= 0) {
+        if (id > allTask.size() || id <= 0) {
             throw BarryException.taskNotFound(total);
         } else {
-
+			Task t = allTask.markTask(id - 1, mark.equals("mark"));
 			String comment = mark.equals("mark")
 					?  "Nice! I've marked this task as done:"
 					: "Ok! I've marked this task as not done yet:";
 
 	        ArrayList<String> s = new ArrayList<>();
 	        s.add(comment);
-	        s.add("\t" + taskList.get(id - 1));
+	        s.add("\t" + t.toString());
             ui.print(s);
         }
     }
@@ -321,8 +323,8 @@ public class Barry {
 		ArrayList<String> s = new ArrayList<>();
         s.add("Here are the tasks in your list:");
         int i = 1;
-        for (Task item : taskList) {
-            s.add("\t" + i + "." + item.toString());
+        for (String item : allTask.listTasks()) {
+            s.add("\t" + i + "." + item);
             i++;
         }
         ui.print(s);
@@ -350,5 +352,6 @@ public class Barry {
 	    ArrayList<String> s = new ArrayList<>();
 		s.add("Bye. Hope to see you again soon!");
         ui.print(s);
+		saveData();
     }
 }
