@@ -1,4 +1,4 @@
-public enum Command {
+public enum CommandType {
     TODO("todo",
             "todo {description}",
             "todo Do the laundry"),
@@ -21,14 +21,14 @@ public enum Command {
     private final String formula;
     private final String example;
 
-    Command(String type, String formula, String example) {
+    CommandType(String type, String formula, String example) {
         this.type = type;
         this.formula = formula;
         this.example = example;
     }
 
-    public static Command parseCommand(String s) throws BarryException {
-        for (Command c : Command.values()) {
+    public static CommandType parseCommand(String s) throws BarryException {
+        for (CommandType c : CommandType.values()) {
             if (c.getType().equals(s)) {
                 return c;
             }
@@ -38,7 +38,7 @@ public enum Command {
 
     public static String allCommands() {
         StringBuilder s = new StringBuilder("");
-        for (Command c : Command.values()) {
+        for (CommandType c : CommandType.values()) {
             s.append("\t\t");
             s.append(c.getType());
             s.append("\n");
@@ -48,7 +48,7 @@ public enum Command {
 
     public static String allCommandsDetailed() {
         StringBuilder s = new StringBuilder("");
-        for (Command c : Command.values()) {
+        for (CommandType c : CommandType.values()) {
             s.append("\t\t");
             s.append(c.getFormula());
             s.append("\n");
