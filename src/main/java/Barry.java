@@ -1,10 +1,11 @@
+import commands.Command;
 import commands.CommandType;
 import data.TaskList;
 import data.exceptions.BarryException;
 import parser.Parser;
+import storage.Storage;
 import tasks.Deadline;
 import tasks.Event;
-import tasks.Task;
 import tasks.Todo;
 import ui.Ui;
 
@@ -14,7 +15,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -27,25 +27,43 @@ public class Barry {
 	private final Ui ui;
 
 	// Store all tasks in the session
-	private final TaskList allTask;
+	private final TaskList taskList;
 
+	// Parse the command
 	private final Parser parser;
 
-	public Barry() {
+	// Interact with local storage
+	private final Storage storage;
+
+	public Barry(Path path) {
 		this.ui = new Ui();
-		this.allTask = new TaskList();
+		this.taskList = new TaskList();
 		this.parser = new Parser();
+		this.storage = new Storage(path);
 	}
 
 	public void run() {
 		ui.printGreetings();
 		fetchData();
-		startSession();
-		endSession();
+		Scanner scan = new Scanner(System.in);
+		boolean isExit = false;
+		while(!isExit) {
+			try {
+				String temp = scan.nextLine();
+				Command c = parser.parseCommand(temp);
+				c.execute(taskList, ui, storage);
+				isExit = c.isExit;
+			} catch (BarryException e) {
+				ArrayList<String> s = new ArrayList<>();
+				s.add("OOPS!!! " + e.getMessage());
+				ui.print(s);
+			}
+		}
+		ui.printGoodbye();
 	}
 
 	public static void main(String[] args) {
-		new Barry().run();
+		new Barry(Paths.get("..","data", "Barry.txt")).run();
 	}
 
 
@@ -64,20 +82,20 @@ public class Barry {
 					String name = cmd[2];
 					switch (type) {
 					case "T":
-						allTask.addTask(new Todo(name));
+						taskList.addTask(new Todo(name));
 						break;
 					case "D":
 						String by = cmd[3];
 						LocalDateTime due = LocalDateTime.parse(by, formatter);
-						allTask.addTask(new Deadline(name, due));
+						taskList.addTask(new Deadline(name, due));
 						break;
 					case "E":
 						LocalDateTime start = LocalDateTime.parse(cmd[3], formatter);
 						LocalDateTime end = LocalDateTime.parse(cmd[4], formatter);
-						allTask.addTask(new Event(name, start, end));
+						taskList.addTask(new Event(name, start, end));
 						break;
 					}
-					allTask.markTask(allTask.size() - 1, marked.equals("1"));
+					taskList.markTask(taskList.size() - 1, marked.equals("1"));
 
 				} catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
 					continue;
@@ -98,7 +116,7 @@ public class Barry {
 
 	public void saveData() {
 		StringBuilder s = new StringBuilder();
-		for (String t : allTask.listTasks()) {
+		for (String t : taskList.listTasks()) {
 			char type = t.charAt(1);
 			boolean marked = t.charAt(4) == 'X';
 			String command = t.substring(7);
@@ -157,149 +175,5 @@ public class Barry {
 			System.out.println("Something went wrong: " + e.getMessage());
 		}
 	}
-	
-    /**
-     * Runs the main loop to read and process user commands.
-     */
-    public void startSession() {
-        Scanner scan = new Scanner(System.in);
-        while(true) {
-            try {
-                String temp = scan.nextLine();
-                String tag = temp.split(" ")[0];
-                switch (CommandType.parseCommand(tag)) {
-                case TODO:
-                case DEADLINE:
-                case EVENT:
-	                ui.print(parser.parseTask(temp, allTask));
-                    break;
 
-                case MARK:
-                case UNMARK:
-                    markTask(temp);
-                    break;
-
-                case DELETE:
-                    deleteTask(temp);
-                    break;
-
-                case LIST:
-                    printList(temp);
-                    break;
-
-                case BYE:
-                    if(temp.equals("bye")) {
-                        return;
-                    } else {
-                        throw BarryException.commandException();
-                    }
-
-                case HELP:
-                case DETAILED_HELP:
-                    printHelp(temp);
-                    break;
-
-                default:
-                    throw BarryException.commandException();
-                }
-            } catch (BarryException e) {
-				ArrayList<String> s = new ArrayList<>();
-				s.add("OOPS!!! " + e.getMessage());
-                ui.print(s);
-            }
-        }
-    }
-
-    /**
-     * Deletes a task from the list.
-     *
-     * @param command the command string describing the task
-     */
-    public void deleteTask(String command) throws BarryException {
-        if (!(Pattern.matches("delete [0-9]+", command))) {
-            throw BarryException.commandException(new CommandType[]{CommandType.DELETE});
-        }
-        int total = allTask.size();
-        String[] ss = command.split(" ");
-        int id = Integer.parseInt(ss[1]);
-        if (id > allTask.size() || id <= 0) {
-            throw BarryException.taskNotFound(total);
-        }
-	    String deletedTask = allTask.deleteTask(id).toString();
-		ArrayList<String> s = new ArrayList<>();
-		s.add("Noted. I've removed this task:");
-		s.add("\t" + deletedTask);
-		s.add("Now you have " + (total - 1) + (total - 1 > 1 ? " tasks " : " task ") + "in the list.");
-		ui.print(s);
-    }
-
-    /**
-     * Marks the task as done or undone.
-     *
-     * @param command the user input containing the action and task index
-     */
-    public void markTask(String command) throws BarryException {
-        if (!(Pattern.matches("(mark|unmark) [0-9]+", command))) {
-            throw BarryException.commandException(new CommandType[]{CommandType.MARK, CommandType.UNMARK});
-        }
-        int total = allTask.size();
-        String[] ss = command.split(" ");
-        String mark = ss[0];
-        int id = Integer.parseInt(ss[1]);
-        if (id > allTask.size() || id <= 0) {
-            throw BarryException.taskNotFound(total);
-        } else {
-			Task t = allTask.markTask(id - 1, mark.equals("mark"));
-			String comment = mark.equals("mark")
-					?  "Nice! I've marked this task as done:"
-					: "Ok! I've marked this task as not done yet:";
-
-	        ArrayList<String> s = new ArrayList<>();
-	        s.add(comment);
-	        s.add("\t" + t.toString());
-            ui.print(s);
-        }
-    }
-
-    /**
-     * Prints all tasks currently stored in taskList, with their status and index.
-     */
-    public void printList(String command) throws BarryException {
-        if (!command.equals("list")) {
-            throw BarryException.commandException(new CommandType[]{CommandType.LIST});
-        }
-		ArrayList<String> s = new ArrayList<>();
-        s.add("Here are the tasks in your list:");
-        int i = 1;
-        for (String item : allTask.listTasks()) {
-            s.add("\t" + i + "." + item);
-            i++;
-        }
-        ui.print(s);
-    }
-
-    public void printHelp(String ss) throws BarryException{
-        if (!ss.equals("help") && !ss.equals("help --details"))  {
-            throw BarryException.commandException(new CommandType[]{CommandType.HELP, CommandType.DETAILED_HELP});
-        }
-	    ArrayList<String> s = new ArrayList<>();
-        if (ss.equals("help")) {
-			s.add("The command must start with one of these below:");
-			s.add(CommandType.allCommands());
-        } else {
-	        s.add("The command must have the formula as one of these below:");
-	        s.add(CommandType.allCommandsDetailed());
-        }
-		ui.print(s);
-    }
-
-    /**
-     * Prints the goodbye message.
-     */
-    public void endSession() {
-	    ArrayList<String> s = new ArrayList<>();
-		s.add("Bye. Hope to see you again soon!");
-        ui.print(s);
-		saveData();
-    }
 }

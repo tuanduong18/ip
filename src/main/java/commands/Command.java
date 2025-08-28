@@ -1,8 +1,14 @@
 package commands;
 import data.TaskList;
+import data.exceptions.BarryException;
 import storage.Storage;
 import ui.Ui;
 
 abstract public class Command {
-	abstract void execute(TaskList t, Ui ui, Storage storage);
+	public final boolean isExit;
+	public abstract void execute(TaskList taskList, Ui ui, Storage storage) throws BarryException;
+
+	public Command(boolean isExit) {
+		this.isExit = isExit;
+	}
 }

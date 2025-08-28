@@ -18,16 +18,16 @@ public class TaskList {
 		this.allTask.add(t);
 	}
 
-	public Task deleteTask(int index) {
+	public String deleteTask(int index) {
 		Task t = allTask.get(index);
 		this.allTask.remove(index);
-		return t;
+		return t.toString();
 
 	}
 
-	public Task markTask(int index, boolean marked) {
+	public String markTask(int index, boolean marked) {
 		this.allTask.get(index).setStatus(marked);
-		return allTask.get(index);
+		return allTask.get(index).toString();
 	}
 
 	public int size() {
