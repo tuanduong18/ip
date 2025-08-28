@@ -3,7 +3,7 @@ package data.exceptions;
 import commands.CommandType;
 
 public class BarryException extends  Exception {
-    BarryException(String message) {
+    public BarryException(String message) {
         super(message);
     }
 
@@ -14,11 +14,11 @@ public class BarryException extends  Exception {
     public static BarryException commandException(CommandType[] cmds) {
         StringBuilder s = new StringBuilder("Invalid command. Perhaps, you are mentioning one of these below:\n");
         for (CommandType cmd: cmds) {
-            s.append("\t\t");
+            s.append("\t");
             s.append(cmd.getFormula());
             s.append("\n");
         }
-        s.append("\tType 'help' or 'help --details' for more information about the valid commands");
+        s.append("Type 'help' or 'help --details' for more information about the valid commands");
         return new BarryException(s.toString());
     }
 
@@ -36,5 +36,9 @@ public class BarryException extends  Exception {
 
 	public static BarryException invalidTimestamp(CommandType c, String s, String regx) {
 		return new BarryException("Invalid time format of the " + c.getType() + "'s " + s + ". It should be " + regx);
+	}
+
+	public static BarryException invalidSourceFilePath() {
+		return new BarryException("Invalid source file path");
 	}
 }
