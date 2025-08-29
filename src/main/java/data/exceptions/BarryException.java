@@ -41,4 +41,12 @@ public class BarryException extends  Exception {
 	public static BarryException invalidSourceFilePath() {
 		return new BarryException("Invalid source file path");
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof BarryException) {
+			return o.toString().equals(this.toString());
+		}
+		return false;
+	}
 }
