@@ -21,4 +21,12 @@ public class Task {
                 ? "[X] " + this.name
                 : "[ ] " + this.name;
     }
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Task) {
+			return o.toString().equals(this.toString());
+		}
+		return false;
+	}
 }
