@@ -4,22 +4,26 @@ package tasks;
  * A tasks.Task has description (name) and a status, initially is false (undone).
  */
 public class Task {
-    private final String name;
+    private final String description;
     private boolean status = false;
 
-    public Task(String name) {
-        this.name = name;
+    public Task(String description) {
+        this.description = description;
     }
 
     public void setStatus(boolean status) {
         this.status = status;
     }
 
+	public String getDescription() {
+		return this.description;
+	}
+
     @Override
     public String toString() {
         return this.status
-                ? "[X] " + this.name
-                : "[ ] " + this.name;
+                ? "[X] " + this.description
+                : "[ ] " + this.description;
     }
 
 	@Override

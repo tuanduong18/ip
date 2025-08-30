@@ -10,8 +10,8 @@ public class Event extends Task {
     private final LocalDateTime start;
     private final LocalDateTime end;
 
-    public Event(String name, LocalDateTime start, LocalDateTime end) {
-        super(name);
+    public Event(String description, LocalDateTime start, LocalDateTime end) {
+        super(description);
         this.start = start;
         this.end = end;
     }

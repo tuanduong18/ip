@@ -4,8 +4,8 @@ package tasks;
  * A tasks.Todo is a tasks.Task with description only.
  */
 public class Todo extends Task {
-    public Todo(String name) {
-        super(name);
+    public Todo(String description) {
+        super(description);
     }
 
     @Override

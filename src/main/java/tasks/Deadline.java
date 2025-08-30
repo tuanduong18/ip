@@ -9,8 +9,8 @@ import java.time.format.DateTimeFormatter;
 public class Deadline extends Task {
     private final LocalDateTime dueAt;
 
-    public Deadline(String name, LocalDateTime dueAt) {
-        super(name);
+    public Deadline(String description, LocalDateTime dueAt) {
+        super(description);
         this.dueAt = dueAt;
     }
 
