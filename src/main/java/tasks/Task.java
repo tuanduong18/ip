@@ -3,7 +3,7 @@ package tasks;
 /**
  * Represents a task with a description and a completion status.
  * <p>
- * A {@code Task} has a name (description) and a boolean status
+ * A {@code Task} has a description and a boolean status
  * indicating whether it is marked as completed. The status is
  * {@code false} (not completed) by default.
  * </p>
@@ -13,7 +13,7 @@ public class Task {
 	/**
 	 * The description of the task.
 	 */
-	private final String name;
+	private final String description;
 
 	/**
 	 * The completion status of the task.
@@ -25,10 +25,10 @@ public class Task {
 	 * Creates a {@code Task} with the given description.
 	 * By default, the task is uncompleted.
 	 *
-	 * @param name the description of the task
+	 * @param description the description of the task
 	 */
-    public Task(String name) {
-        this.name = name;
+    public Task(String description) {
+        this.description = description;
     }
 
 	/**
@@ -41,6 +41,9 @@ public class Task {
         this.status = status;
     }
 
+    public String getDescription() {
+	    return this.description;
+    }
 	/**
 	 * Returns a string representation of the task,
 	 * showing its completion status and description.
@@ -54,8 +57,8 @@ public class Task {
     @Override
     public String toString() {
         return this.status
-                ? "[X] " + this.name
-                : "[ ] " + this.name;
+                ? "[X] " + this.description
+                : "[ ] " + this.description;
     }
 
 	@Override

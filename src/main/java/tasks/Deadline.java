@@ -22,11 +22,11 @@ public class Deadline extends Task {
 	 * Creates a {@code Deadline} with the specified description
 	 * and due date/time.
 	 *
-	 * @param name  the description of the deadline task
+	 * @param description  the description of the deadline task
 	 * @param dueAt the due date and time of the task
 	 */
-    public Deadline(String name, LocalDateTime dueAt) {
-        super(name);
+    public Deadline(String description, LocalDateTime dueAt) {
+        super(description);
         this.dueAt = dueAt;
     }
 

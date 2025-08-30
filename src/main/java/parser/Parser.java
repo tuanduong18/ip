@@ -21,6 +21,7 @@ public class Parser {
 	String MARK_REGX = "(mark|unmark) [0-9]+";
 	String LIST_REGEX = "(list)";
 	String DELETE_REGEX = "(delete) [0-9]+";
+	String FIND_REGEX = "(find) .*";
 	String HELP_REGEX = "(help)";
 	String DETAILED_HELP_REGEX = "(help --details)";
 
@@ -41,6 +42,9 @@ public class Parser {
 
 		case LIST:
 			return listTask(fullCommand);
+
+		case FIND:
+			return findTask(fullCommand);
 
 		case BYE:
 			if(fullCommand.equals("bye")) {
@@ -157,5 +161,13 @@ public class Parser {
 		}
 
 		return new HelpCommand(command.equals("help --details"));
+	}
+
+	public Command findTask(String command) throws BarryException {
+		if (!(Pattern.matches(FIND_REGEX, command)))  {
+			throw BarryException.commandException(new CommandType[]{FIND});
+		}
+		String[] ss = command.split(" ", 2);
+		return new FindCommand(ss[1]);
 	}
 }

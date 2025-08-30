@@ -104,5 +104,16 @@ public class Ui {
 		s.add(CommandType.allCommandsDetailed());
 		this.print(s);
 	}
+
+	public void printMatchingTasks(ArrayList<String> taskList) {
+		ArrayList<String> s = new ArrayList<>();
+		s.add("Here are the matching tasks in your list:");
+		int i = 1;
+		for (String item : taskList) {
+			s.add("\t" + i + "." + item);
+			i++;
+		}
+		this.print(s);
+	}
 }
 

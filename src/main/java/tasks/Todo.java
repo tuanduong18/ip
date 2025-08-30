@@ -13,10 +13,10 @@ public class Todo extends Task {
 	/**
 	 * Creates a {@code Todo} with the specified description.
 	 *
-	 * @param name the description of the to-do task
+	 * @param description the description of the to-do task
 	 */
-	public Todo(String name) {
-        super(name);
+    public Todo(String description) {
+        super(description);
     }
 
 	/**
