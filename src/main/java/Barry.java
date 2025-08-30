@@ -1,14 +1,14 @@
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 import commands.Command;
 import data.TaskList;
 import data.exceptions.BarryException;
 import parser.Parser;
 import storage.Storage;
 import ui.Ui;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 
 public class Barry {
