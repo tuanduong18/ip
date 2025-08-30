@@ -107,6 +107,11 @@ public class Ui {
 
 	public void printMatchingTasks(ArrayList<String> taskList) {
 		ArrayList<String> s = new ArrayList<>();
+		if (taskList.size() == 0) {
+			s.add("Oops! There isn't any task match your search");
+			this.print(s);
+			return;
+		}
 		s.add("Here are the matching tasks in your list:");
 		int i = 1;
 		for (String item : taskList) {
