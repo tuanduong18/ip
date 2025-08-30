@@ -1,16 +1,15 @@
 package parser;
 
-import commands.*;
-import data.exceptions.BarryException;
-import tasks.*;
+import static commands.CommandType.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import static commands.CommandType.*;
+import commands.*;
+import data.exceptions.BarryException;
+import tasks.*;
 
 public class Parser {
 	String DATE_FORMAT = "dd/MM/yyyy HH:mm";

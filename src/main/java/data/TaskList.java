@@ -1,7 +1,8 @@
 package data;
-import tasks.Task;
 
 import java.util.ArrayList;
+
+import tasks.Task;
 
 public class TaskList {
 	private final ArrayList<Task> allTask;

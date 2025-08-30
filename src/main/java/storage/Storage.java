@@ -1,15 +1,15 @@
 package storage;
 
-import data.TaskList;
-import data.exceptions.BarryException;
-import tasks.*;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Scanner;
+
+import data.TaskList;
+import data.exceptions.BarryException;
+import tasks.Task;
 
 public class Storage {
 	private final Path filePath;
