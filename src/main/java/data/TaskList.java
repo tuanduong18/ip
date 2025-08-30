@@ -41,4 +41,15 @@ public class TaskList {
 		}
 		return s;
 	}
+
+	public ArrayList<String> findMatchingTasks(String pattern) {
+		ArrayList<String> s = new ArrayList<String>();
+		for (Task t : allTask) {
+			if(t.getDescription().toLowerCase().contains(pattern.toLowerCase())) {
+				s.add(t.toString());
+			}
+		}
+		return s;
+	}
+
 }

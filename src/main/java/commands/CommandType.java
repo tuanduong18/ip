@@ -16,6 +16,7 @@ public enum CommandType {
     UNMARK("unmark", "unmark {id}", "unmark 3"),
     LIST("list", "list", "list"),
     DELETE("delete", "delete {id}", "delete 2"),
+	FIND("find", "find {description}", "find book"),
     BYE("bye", "bye", "bye"),
     HELP("help", "help", "help"),
     DETAILED_HELP("help --details", "help --details", "help --details");
