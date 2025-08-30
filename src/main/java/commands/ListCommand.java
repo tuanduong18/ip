@@ -2,7 +2,6 @@ package commands;
 
 import data.TaskList;
 import storage.Storage;
-import tasks.Task;
 import ui.Ui;
 
 public class ListCommand extends Command{

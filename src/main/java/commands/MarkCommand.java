@@ -3,7 +3,6 @@ package commands;
 import data.TaskList;
 import data.exceptions.BarryException;
 import storage.Storage;
-import tasks.Task;
 import ui.Ui;
 
 public class MarkCommand extends Command {
