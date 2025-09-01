@@ -1,13 +1,28 @@
 package parser;
 
-import static commands.CommandType.*;
+import static commands.CommandType.DEADLINE;
+import static commands.CommandType.DELETE;
+import static commands.CommandType.EVENT;
+import static commands.CommandType.FIND;
+import static commands.CommandType.LIST;
+import static commands.CommandType.MARK;
+import static commands.CommandType.TODO;
+import static commands.CommandType.UNMARK;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
 
-import commands.*;
+import commands.AddCommand;
+import commands.Command;
+import commands.CommandType;
+import commands.DeleteCommand;
+import commands.ExitCommand;
+import commands.FindCommand;
+import commands.HelpCommand;
+import commands.ListCommand;
+import commands.MarkCommand;
 import data.exceptions.BarryException;
 import tasks.*;
 
