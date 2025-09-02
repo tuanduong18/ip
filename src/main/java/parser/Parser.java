@@ -1,13 +1,13 @@
 package parser;
 
-import static commands.CommandType.DEADLINE;
-import static commands.CommandType.DELETE;
-import static commands.CommandType.EVENT;
-import static commands.CommandType.FIND;
-import static commands.CommandType.LIST;
-import static commands.CommandType.MARK;
-import static commands.CommandType.TODO;
-import static commands.CommandType.UNMARK;
+import static data.common.CommandType.DEADLINE;
+import static data.common.CommandType.DELETE;
+import static data.common.CommandType.EVENT;
+import static data.common.CommandType.FIND;
+import static data.common.CommandType.LIST;
+import static data.common.CommandType.MARK;
+import static data.common.CommandType.TODO;
+import static data.common.CommandType.UNMARK;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 import commands.AddCommand;
 import commands.Command;
-import commands.CommandType;
+import data.common.CommandType;
 import commands.DeleteCommand;
 import commands.ExitCommand;
 import commands.FindCommand;

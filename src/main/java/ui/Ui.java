@@ -1,6 +1,6 @@
 package ui;
 
-import commands.CommandType;
+import data.common.CommandType;
 
 import java.util.ArrayList;
 

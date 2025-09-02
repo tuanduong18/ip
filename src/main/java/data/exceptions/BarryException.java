@@ -1,6 +1,6 @@
 package data.exceptions;
 
-import commands.CommandType;
+import data.common.CommandType;
 
 public class BarryException extends  Exception {
     public BarryException(String message) {

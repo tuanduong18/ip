@@ -1,4 +1,4 @@
-package commands;
+package data.common;
 
 import data.exceptions.BarryException;
 

@@ -5,7 +5,6 @@ import data.exceptions.BarryException;
 import org.junit.jupiter.api.Test;
 import tasks.Deadline;
 import tasks.Todo;
-import commands.CommandType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,7 +12,7 @@ import java.time.format.DateTimeParseException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-import static commands.CommandType.*;
+import static data.common.CommandType.*;
 
 public class ParserTest {
 	Parser parser = new Parser();

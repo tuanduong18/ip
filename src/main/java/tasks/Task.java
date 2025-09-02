@@ -41,9 +41,13 @@ public class Task {
         this.status = status;
     }
 
+	/**
+	 * @return the string representation of the task's description
+	 */
     public String getDescription() {
 	    return this.description;
     }
+
 	/**
 	 * Returns a string representation of the task,
 	 * showing its completion status and description.
