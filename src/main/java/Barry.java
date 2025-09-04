@@ -6,7 +6,7 @@ import java.util.Scanner;
 import commands.Command;
 import data.TaskList;
 import data.exceptions.BarryException;
-import parser.Parser;
+import parser.CommandParser;
 import storage.Storage;
 import ui.Ui;
 
@@ -20,14 +20,14 @@ public class Barry {
 	private final TaskList taskList;
 
 	// Parse the command
-	private final Parser parser;
+	private final CommandParser parser;
 
 	// Interact with local storage
 	private final Storage storage;
 
 	public Barry(Path path) {
 		this.ui = new Ui();
-		this.parser = new Parser();
+		this.parser = new CommandParser();
 		this.storage = new Storage(path);
 		TaskList stored = new TaskList();
 		try {
