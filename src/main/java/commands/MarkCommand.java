@@ -25,19 +25,19 @@ public class MarkCommand extends Command {
 	 * Indicates whether the task should be marked or unmarked.
 	 * {@code true} means mark the task, {@code false} means unmark the task.
 	 */
-	private final boolean marked;
+	private final boolean isMarked;
 
 	/**
 	 * Creates a {@code MarkCommand}.
 	 *
 	 * @param id the one-based index of the task in the task list
-	 * @param marked {@code true} if the task should be marked as done,
+	 * @param isMarked {@code true} if the task should be marked as done,
 	 *               {@code false} if the task should be unmarked
 	 */
-	public MarkCommand(int id, boolean marked) {
+	public MarkCommand(int id, boolean isMarked) {
 		super(false);
 		this.id = id;
-		this.marked = marked;
+		this.isMarked = isMarked;
 	}
 
 	/**
@@ -54,8 +54,8 @@ public class MarkCommand extends Command {
 		if(id <= 0 || id > taskList.size()) {
 			throw BarryException.taskNotFound(taskList.size());
 		}
-		String task = taskList.markTask(id - 1, marked);
-		ui.printMarkTask(task, marked);
+		String task = taskList.markTask(id - 1, isMarked);
+		ui.printMarkTask(task, isMarked);
 		storage.save(taskList);
 	}
 
