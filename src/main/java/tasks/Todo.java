@@ -10,27 +10,27 @@ package tasks;
  */
 public class Todo extends Task {
 
-	/**
-	 * Creates a {@code Todo} with the specified description.
-	 *
-	 * @param description the description of the to-do task
-	 */
+    /**
+     * Creates a {@code Todo} with the specified description.
+     *
+     * @param description the description of the to-do task
+     */
     public Todo(String description) {
         super(description);
     }
 
-	/**
-	 * Returns a string representation of the to-do task, showing its type,
-	 * completion status, and description.
-	 * <p>
-	 * The format is:
-	 * <pre>
-	 * [T][ ] Task description
-	 * </pre>
-	 * </p>
-	 *
-	 * @return the formatted string representation of the to-do task
-	 */
+    /**
+     * Returns a string representation of the to-do task, showing its type,
+     * completion status, and description.
+     * <p>
+     * The format is:
+     * <pre>
+     * [T][ ] Task description
+     * </pre>
+     * </p>
+     *
+     * @return the formatted string representation of the to-do task
+     */
     @Override
     public String toString() {
         return "[T]" + super.toString();

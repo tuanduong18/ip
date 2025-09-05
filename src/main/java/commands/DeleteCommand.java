@@ -16,48 +16,52 @@ import ui.Ui;
  */
 public class DeleteCommand extends Command {
 
-	/**
-	 * The one-based index of the task to be deleted.
-	 */
-	private final int id;
+    /**
+     * The one-based index of the task to be deleted.
+     */
+    private final int id;
 
-	/**
-	 * Creates a {@code DeleteCommand} to delete the task at the specified index.
-	 *
-	 * @param id the one-based index of the task in the task list
-	 */
-	public DeleteCommand(int id) {
-		super(false);
-		this.id = id;
-	}
+    /**
+     * Creates a {@code DeleteCommand} to delete the task at the specified index.
+     *
+     * @param id the one-based index of the task in the task list
+     */
+    public DeleteCommand(int id) {
+        super(false);
+        this.id = id;
+    }
 
-	/**
-	 * Executes the command by removing the task at the specified index
-	 * from the task list, saving the updated list to storage, and
-	 * showing feedback to the user.
-	 *
-	 * @param taskList the task list from which the task will be deleted
-	 * @param ui the user interface used to show the delete confirmation
-	 * @param storage the storage handler used to persist the updated task list
-	 * @throws BarryException if the index is invalid (≤ 0 or greater than the task list size)
-	 */
-	@Override
-	public void execute(TaskList taskList, Ui ui, Storage storage) throws BarryException {
-		if(id <= 0 || id > taskList.size()) {
-			throw BarryException.taskNotFound(taskList.size());
-		}
+    /**
+     * Executes the command by removing the task at the specified index
+     * from the task list, saving the updated list to storage, and
+     * showing feedback to the user.
+     *
+     * @param taskList the task list from which the task will be deleted
+     * @param ui       the user interface used to show the delete confirmation
+     * @param storage  the storage handler used to persist the updated task list
+     * @throws BarryException if the index is invalid (≤ 0 or greater than the task list size)
+     */
+    @Override
+    public void execute(TaskList taskList, Ui ui, Storage storage) throws BarryException {
+        if (id <= 0 || id > taskList.size()) {
+            throw BarryException.taskNotFound(taskList.size());
+        }
+        try {
+            String task = taskList.deleteTask(id - 1);
+            ui.printDeleteTask(task, taskList.size());
+            storage.save(taskList);
+        } catch (IndexOutOfBoundsException e) {
+            // Should not go into this line
+            throw BarryException.taskNotFound(taskList.size());
+        }
+    }
 
-		String task = taskList.deleteTask(id - 1);
-		ui.printDeleteTask(task, taskList.size());
-		storage.save(taskList);
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof DeleteCommand) {
-			int oId = ((DeleteCommand) o).id;
-			return oId == id;
-		}
-		return false;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof DeleteCommand) {
+            int oId = ((DeleteCommand) o).id;
+            return oId == id;
+        }
+        return false;
+    }
 }
