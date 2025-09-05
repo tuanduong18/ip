@@ -59,7 +59,7 @@ public class CommandParser {
         case LIST -> listTask();
         case FIND -> findTask(params.get(1));
         case BYE -> new ExitCommand();
-        case HELP, DETAILED_HELP -> help(fullCommand);
+        case HELP-> help(fullCommand);
         default -> throw BarryException.commandException();
         };
     }

@@ -48,12 +48,12 @@ public class DeleteCommand extends Command {
         }
         try {
             String task = taskList.deleteTask(id - 1);
+            ui.printDeleteTask(task, taskList.size());
+            storage.save(taskList);
         } catch (IndexOutOfBoundsException e) {
             // Should not go into this line
             throw BarryException.taskNotFound(taskList.size());
         }
-        ui.printDeleteTask(task, taskList.size());
-        storage.save(taskList);
     }
 
     @Override

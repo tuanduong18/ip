@@ -27,8 +27,7 @@ public enum CommandRegex {
     LIST("list", Pattern.compile("list")),
     DELETE("delete", Pattern.compile("delete ([0-9]+)")),
     FIND("find", Pattern.compile("find (.*)")),
-    HELP("help", Pattern.compile("help")),
-    DETAILED_HELP("help", Pattern.compile("help --details")),
+    HELP("help", Pattern.compile("help( --details|)")),
     BYE("bye", Pattern.compile("bye"));
 
     private final String tag;
@@ -46,19 +45,25 @@ public enum CommandRegex {
     }
 
     /**
-     * Parses a raw input line and returns the matching {@code CommandRegex}.
+     * Resolves the given input line to a {@link CommandRegex} by tag and full-pattern match.
      * <p>
-     * The first whitespace-delimited token of {@code command} is treated as the command tag.
-     * The method then selects enum entries with the same tag and returns the first whose
-     * pattern fully matches the input (using {@link Matcher#matches()}).
-     * If no such entry exists, a {@link BarryException} is thrown. When the tag maps to a
-     * known {@code CommandType} but the remainder does not satisfy any expected pattern,
-     * the thrown exception may include that type to aid error messaging.
+     * Steps:
+     * <ol>
+     *   <li>Extract the first whitespace-delimited token of {@code command} as the tag.</li>
+     *   <li>Iterate over enum constants; for those whose {@code tag} equals the extracted tag,
+     *       return the first whose pattern <em>fully</em> matches the entire input
+     *       (via {@link java.util.regex.Matcher#matches()}).</li>
+     *   <li>If the tag is recognized but none of its patterns match the full input,
+     *       throw a {@link BarryException} that suggests the corresponding {@link CommandType}.</li>
+     *   <li>If no enum constant shares the tag (i.e., the tag is unknown), throw a generic
+     *       invalid-command {@link BarryException}.</li>
+     * </ol>
      * </p>
      *
      * @param command the complete user input line to parse
      * @return the matching {@code CommandRegex} enum constant
-     * @throws BarryException if the input does not match any known command pattern
+     * @throws BarryException if the tag is unknown, or if the tag is known but the input does not
+     *                        satisfy any expected pattern for that tag
      */
     public static CommandRegex parseCommand(String command) throws BarryException {
         String commandTag = command.split(" ")[0];
@@ -66,10 +71,10 @@ public enum CommandRegex {
             if (commandTag.equals(t.tag)) {
                 if (t.pattern.matcher(command).matches()) {
                     return t;
+                } else {
+                    CommandType c = CommandType.parseCommand(commandTag);
+                    throw BarryException.commandException(new CommandType[]{c});
                 }
-            } else {
-                CommandType c = CommandType.parseCommand(commandTag);
-                throw BarryException.commandException(new CommandType[]{c});
             }
         }
         throw BarryException.commandException();
@@ -88,7 +93,7 @@ public enum CommandRegex {
      *
      * @param command the complete user input line to extract from
      * @return an {@link ArrayList} where index 0 is the command tag and subsequent indices
-     * are the trimmed contents of each capturing group (if any)
+     *     are the trimmed contents of each capturing group (if any)
      */
     public ArrayList<String> extractComponents(String command) {
         ArrayList<String> components = new ArrayList<>();
