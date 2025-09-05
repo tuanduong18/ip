@@ -22,9 +22,9 @@ public class CommandParser {
 		return switch (c) {
 			case TODO, DEADLINE, EVENT -> addTask(fullCommand);
 			case MARK, UNMARK -> markTask(params.get(0), params.get(1));
-			case DELETE -> deleteTask(params.get(0));
+			case DELETE -> deleteTask(params.get(1));
 			case LIST -> listTask();
-			case FIND -> findTask(params.get(0));
+			case FIND -> findTask(params.get(1));
 			case BYE -> new ExitCommand();
 			case HELP, DETAILED_HELP -> help(fullCommand);
 			default -> throw BarryException.commandException();

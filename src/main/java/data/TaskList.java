@@ -36,7 +36,7 @@ public class TaskList {
 	}
 
 	public ArrayList<String> listTasks() {
-		ArrayList<String> s = new ArrayList<String>();
+		ArrayList<String> s = new ArrayList<>();
 		for (Task t : taskList) {
 			s.add(t.toString());
 		}
@@ -44,7 +44,7 @@ public class TaskList {
 	}
 
 	public ArrayList<String> findMatchingTasks(String pattern) {
-		ArrayList<String> s = new ArrayList<String>();
+		ArrayList<String> s = new ArrayList<>();
 		for (Task t : taskList) {
 			if(t.getDescription().toLowerCase().contains(pattern.toLowerCase())) {
 				s.add(t.toString());

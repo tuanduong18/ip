@@ -42,7 +42,7 @@ public enum CommandRegex {
 	public ArrayList<String> extractComponents(String command) {
 		ArrayList<String> components = new ArrayList<>();
 		Matcher matcher = pattern.matcher(command);
-
+		components.add(this.tag);
 		if (matcher.matches()) {
 			for (int i = 1; i <= matcher.groupCount(); i++) {
 				components.add(matcher.group(i).trim());
