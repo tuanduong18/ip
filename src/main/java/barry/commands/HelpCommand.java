@@ -2,6 +2,7 @@ package barry.commands;
 
 import barry.data.TaskList;
 import barry.storage.Storage;
+import barry.ui.Gui;
 import barry.ui.Ui;
 
 /**
@@ -46,6 +47,15 @@ public class HelpCommand extends Command {
             ui.printHelp();
         } else {
             ui.printDetailedHelp();
+        }
+    }
+
+    @Override
+    public String execute(TaskList taskList, Gui gui, Storage storage) {
+        if (isDetailed) {
+            return gui.printHelp();
+        } else {
+            return gui.printDetailedHelp();
         }
     }
 

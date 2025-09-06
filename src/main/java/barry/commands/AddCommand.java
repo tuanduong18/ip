@@ -3,6 +3,7 @@ package barry.commands;
 import barry.data.TaskList;
 import barry.storage.Storage;
 import barry.tasks.Task;
+import barry.ui.Gui;
 import barry.ui.Ui;
 
 /**
@@ -41,8 +42,15 @@ public class AddCommand extends Command {
     @Override
     public void execute(TaskList taskList, Ui ui, Storage storage) {
         taskList.addTask(task);
-        ui.printAddTask(task.toString(), taskList.size());
         storage.save(taskList);
+        ui.printAddTask(task.toString(), taskList.size());
+    }
+
+    @Override
+    public String execute(TaskList taskList, Gui gui, Storage storage) {
+        taskList.addTask(task);
+        storage.save(taskList);
+        return gui.printAddTask(task.toString(), taskList.size());
     }
 
     @Override

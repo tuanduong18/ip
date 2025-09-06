@@ -27,7 +27,7 @@ public class Ui {
                                                     \\$$$$$$  |
                                                      \\______/""";
 
-    private static final String greeting = "Hello from Barry.Barry, what can I do for you?";
+    private static final String greeting = "Hello from Barry, what can I do for you?";
 
     /**
      * Prints the given lines inside a framed block with uniform indentation.
@@ -82,7 +82,7 @@ public class Ui {
         ArrayList<String> s = new ArrayList<>();
         s.add("Got it. I've added this task:");
         s.add("\t" + task);
-        s.add("Now you have " + n + (n > 1 ? "barry/tasks " : " task ") + "in the list.");
+        s.add("Now you have " + n + (n > 1 ? "tasks " : " task ") + "in the list.");
         this.print(s);
     }
 
@@ -129,7 +129,7 @@ public class Ui {
         ArrayList<String> s = new ArrayList<>();
         s.add("Noted. I've removed this task:");
         s.add("\t" + task);
-        s.add("Now you have " + n + (n > 1 ? "barry/tasks " : " task ") + "in the list.");
+        s.add("Now you have " + n + (n > 1 ? "tasks " : " task ") + "in the list.");
         this.print(s);
     }
 
@@ -175,7 +175,7 @@ public class Ui {
      */
     public void printMatchingTasks(ArrayList<String> taskList) {
         ArrayList<String> s = new ArrayList<>();
-        if (taskList.size() == 0) {
+        if (taskList.isEmpty()) {
             s.add("Oops! There isn't any task match your search");
             this.print(s);
             return;

@@ -2,6 +2,7 @@ package barry.commands;
 
 import barry.data.TaskList;
 import barry.storage.Storage;
+import barry.ui.Gui;
 import barry.ui.Ui;
 
 /**
@@ -36,6 +37,12 @@ public class ExitCommand extends Command {
     @Override
     public void execute(TaskList taskList, Ui ui, Storage storage) {
         storage.save(taskList);
+    }
+
+    @Override
+    public String execute(TaskList taskList, Gui gui, Storage storage) {
+        storage.save(taskList);
+        return "Goodbye, have a nice day!";
     }
 
     @Override

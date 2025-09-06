@@ -10,6 +10,7 @@ import barry.data.TaskList;
 import barry.data.exceptions.BarryException;
 import barry.parser.CommandParser;
 import barry.storage.Storage;
+import barry.ui.Gui;
 import barry.ui.Ui;
 
 /**
@@ -27,6 +28,8 @@ public class Barry {
 
     // Print messages from Barry.Barry
     private final Ui ui;
+
+    private final Gui gui;
 
     // Store all tasks in the session
     private final TaskList taskList;
@@ -52,6 +55,7 @@ public class Barry {
      */
     public Barry(Path path) {
         this.ui = new Ui();
+        this.gui = new Gui();
         this.parser = new CommandParser();
         this.storage = new Storage(path);
         TaskList stored = new TaskList();
@@ -94,7 +98,14 @@ public class Barry {
     }
 
     public String getResponse(String input) {
-        return "";
+        try {
+            Command c = parser.parseCommand(input);
+            return c.execute(taskList, gui, storage);
+        } catch (BarryException e) {
+            ArrayList<String> s = new ArrayList<>();
+            s.add("OOPS!!! " + e.getMessage());
+            return gui.print(s);
+        }
     }
 
     /**

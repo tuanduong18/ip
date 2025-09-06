@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import barry.data.TaskList;
 import barry.storage.Storage;
+import barry.ui.Gui;
 import barry.ui.Ui;
 
 /**
@@ -45,5 +46,20 @@ public class FindCommand extends Command {
     public void execute(TaskList taskList, Ui ui, Storage storage) {
         ArrayList<String> tasks = taskList.findMatchingTasks(pattern);
         ui.printMatchingTasks(tasks);
+    }
+
+    @Override
+    public String execute(TaskList taskList, Gui gui, Storage storage) {
+        ArrayList<String> tasks = taskList.findMatchingTasks(pattern);
+        return gui.printMatchingTasks(tasks);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof FindCommand) {
+            String p = ((FindCommand) o).pattern;
+            return p.equals(this.pattern);
+        }
+        return false;
     }
 }

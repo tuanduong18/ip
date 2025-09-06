@@ -20,8 +20,8 @@ import barry.data.exceptions.BarryException;
  */
 public enum CommandRegex {
     TODO("todo", Pattern.compile("todo (.*)")),
-    DEADLINE("deadline", Pattern.compile("deadline (.*)")),
-    EVENT("event", Pattern.compile("event (.*)")),
+    DEADLINE("deadline", Pattern.compile("deadline (.*) /by (.*)")),
+    EVENT("event", Pattern.compile("event (.*) /from (.*) /to (.*)")),
     MARK("mark", Pattern.compile("mark ([0-9]+)")),
     UNMARK("unmark", Pattern.compile("unmark ([0-9]+)")),
     LIST("list", Pattern.compile("list")),

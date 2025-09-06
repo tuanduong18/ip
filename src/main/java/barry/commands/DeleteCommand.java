@@ -4,6 +4,7 @@ import barry.tasks.Task;
 import barry.data.TaskList;
 import barry.data.exceptions.BarryException;
 import barry.storage.Storage;
+import barry.ui.Gui;
 import barry.ui.Ui;
 
 /**
@@ -49,8 +50,23 @@ public class DeleteCommand extends Command {
         }
         try {
             String task = taskList.deleteTask(id - 1);
-            ui.printDeleteTask(task, taskList.size());
             storage.save(taskList);
+            ui.printDeleteTask(task, taskList.size());
+        } catch (IndexOutOfBoundsException e) {
+            // Should not go into this line
+            throw BarryException.taskNotFound(taskList.size());
+        }
+    }
+
+    @Override
+    public String execute(TaskList taskList, Gui gui, Storage storage) throws BarryException {
+        if (id <= 0 || id > taskList.size()) {
+            throw BarryException.taskNotFound(taskList.size());
+        }
+        try {
+            String task = taskList.deleteTask(id - 1);
+            storage.save(taskList);
+            return gui.printDeleteTask(task, taskList.size());
         } catch (IndexOutOfBoundsException e) {
             // Should not go into this line
             throw BarryException.taskNotFound(taskList.size());

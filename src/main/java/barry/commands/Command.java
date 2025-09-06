@@ -3,6 +3,7 @@ package barry.commands;
 import barry.data.TaskList;
 import barry.data.exceptions.BarryException;
 import barry.storage.Storage;
+import barry.ui.Gui;
 import barry.ui.Ui;
 
 /**
@@ -40,4 +41,6 @@ public abstract class Command {
      * @throws BarryException if an error specific to command execution occurs
      */
     public abstract void execute(TaskList taskList, Ui ui, Storage storage) throws BarryException;
+
+    public abstract String execute(TaskList taskList, Gui gui, Storage storage) throws BarryException;
 }

@@ -2,6 +2,7 @@ package barry.commands;
 
 import barry.data.TaskList;
 import barry.storage.Storage;
+import barry.ui.Gui;
 import barry.ui.Ui;
 
 /**
@@ -37,6 +38,11 @@ public class ListCommand extends Command {
     @Override
     public void execute(TaskList taskList, Ui ui, Storage storage) {
         ui.printListTask(taskList.listTasks());
+    }
+
+    @Override
+    public String execute(TaskList taskList, Gui gui, Storage storage) {
+        return gui.printListTask(taskList.listTasks());
     }
 
     @Override

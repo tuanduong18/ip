@@ -4,6 +4,7 @@ import barry.tasks.Task;
 import barry.data.TaskList;
 import barry.data.exceptions.BarryException;
 import barry.storage.Storage;
+import barry.ui.Gui;
 import barry.ui.Ui;
 
 /**
@@ -56,8 +57,18 @@ public class MarkCommand extends Command {
             throw BarryException.taskNotFound(taskList.size());
         }
         String task = taskList.markTask(id - 1, isMarked);
-        ui.printMarkTask(task, isMarked);
         storage.save(taskList);
+        ui.printMarkTask(task, isMarked);
+    }
+
+    @Override
+    public String execute(TaskList taskList, Gui gui, Storage storage) throws BarryException {
+        if (id <= 0 || id > taskList.size()) {
+            throw BarryException.taskNotFound(taskList.size());
+        }
+        String task = taskList.markTask(id - 1, isMarked);
+        storage.save(taskList);
+        return gui.printMarkTask(task, isMarked);
     }
 
     @Override
