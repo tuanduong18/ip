@@ -10,7 +10,7 @@
 	                                        $$\   $$ |
 	                                        \$$$$$$  |
 	                                         \______/
-	Hello from Barry, what can I do for you?
+	Hello from barry.barry, what can I do for you?
 	__________________________________________________
 	__________________________________________________
 	OOPS!!! Invalid command, Type 'help' or 'help --details' for more information

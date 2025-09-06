@@ -9,18 +9,19 @@ import java.time.format.DateTimeFormatter;
 
 import org.junit.jupiter.api.Test;
 
-import commands.AddCommand;
-import commands.Command;
-import commands.DeleteCommand;
-import commands.ExitCommand;
-import commands.FindCommand;
-import commands.HelpCommand;
-import commands.ListCommand;
-import commands.MarkCommand;
-import data.exceptions.BarryException;
-import tasks.Deadline;
-import tasks.Event;
-import tasks.Todo;
+import barry.commands.AddCommand;
+import barry.commands.Command;
+import barry.commands.DeleteCommand;
+import barry.commands.ExitCommand;
+import barry.commands.FindCommand;
+import barry.commands.HelpCommand;
+import barry.commands.ListCommand;
+import barry.commands.MarkCommand;
+import barry.data.exceptions.BarryException;
+import barry.parser.CommandParser;
+import barry.tasks.Deadline;
+import barry.tasks.Event;
+import barry.tasks.Todo;
 
 public class CommandParserTest {
 

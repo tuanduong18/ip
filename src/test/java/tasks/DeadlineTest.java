@@ -7,6 +7,8 @@ import java.time.format.DateTimeFormatter;
 
 import org.junit.jupiter.api.Test;
 
+import barry.tasks.Deadline;
+
 public class DeadlineTest {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm a d MMM, yyyy");
 
