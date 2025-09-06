@@ -36,8 +36,12 @@ public class MainWindow extends AnchorPane {
     }
 
     /** Injects the Source.Duke instance */
-    public void setBarry(Barry b) {
-        barry = b;
+    public void setBarry(Barry barry) {
+        this.barry = barry;
+        // show initial message from Barry/Gui
+        dialogContainer.getChildren().add(
+                DialogBox.getDukeDialog(barry.getGreeting(), dukeImage)
+        );
     }
 
     @FXML

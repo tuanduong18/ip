@@ -48,6 +48,14 @@ public class FindCommand extends Command {
         ui.printMatchingTasks(tasks);
     }
 
+    /**
+     * Semantics are identical to {@link #execute(TaskList, Ui, Storage)}.
+     *
+     * @param taskList the task list to search for matching tasks
+     * @param gui      the GUI facade (analogous to {@link Ui} but returning strings)
+     * @param storage  the storage handler (not used in this command, required by signature)
+     * @return the formatted message listing the matching tasks for display in the GUI
+     */
     @Override
     public String execute(TaskList taskList, Gui gui, Storage storage) {
         ArrayList<String> tasks = taskList.findMatchingTasks(pattern);

@@ -1,9 +1,9 @@
 package barry.commands;
 
-import barry.tasks.Task;
 import barry.data.TaskList;
 import barry.data.exceptions.BarryException;
 import barry.storage.Storage;
+import barry.tasks.Task;
 import barry.ui.Gui;
 import barry.ui.Ui;
 
@@ -58,6 +58,15 @@ public class DeleteCommand extends Command {
         }
     }
 
+    /**
+     * Semantics are identical to {@link #execute(TaskList, Ui, Storage)}
+     *
+     * @param taskList the task list from which the task will be deleted
+     * @param gui      the GUI facade (analogous to {@link Ui} but returning strings)
+     * @param storage  the storage handler used to persist the updated task list
+     * @return the confirmation message including the added task and updated count
+     * @throws BarryException if the index is invalid (≤ 0 or greater than the task list size)
+     */
     @Override
     public String execute(TaskList taskList, Gui gui, Storage storage) throws BarryException {
         if (id <= 0 || id > taskList.size()) {

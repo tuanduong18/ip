@@ -108,6 +108,10 @@ public class Barry {
         }
     }
 
+    public String getGreeting() {
+        return gui.printGreetings(); // returns the greeting string for GUI
+    }
+
     /**
      * Program entry point.
      * <p>

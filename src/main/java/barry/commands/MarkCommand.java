@@ -61,6 +61,15 @@ public class MarkCommand extends Command {
         ui.printMarkTask(task, isMarked);
     }
 
+    /**
+     * Semantics are identical to {@link #execute(TaskList, Ui, Storage)}.
+     *
+     * @param taskList the task list containing the task to be marked/unmarked
+     * @param gui      the GUI facade (analogous to {@link Ui} but returning strings)
+     * @param storage  the storage handler used to persist the updated task list
+     * @return the confirmation message indicating the task and its updated marked status
+     * @throws BarryException if the index is invalid (≤ 0 or greater than the task list size)
+     */
     @Override
     public String execute(TaskList taskList, Gui gui, Storage storage) throws BarryException {
         if (id <= 0 || id > taskList.size()) {

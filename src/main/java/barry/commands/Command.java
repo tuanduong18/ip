@@ -42,5 +42,24 @@ public abstract class Command {
      */
     public abstract void execute(TaskList taskList, Ui ui, Storage storage) throws BarryException;
 
+    /**
+     * Executes the command for a GUI flow and returns the user-facing message.
+     * <p>
+     * Semantics are identical to {@link #execute(TaskList, Ui, Storage)}: implementations
+     * must perform the same side effects on the {@link TaskList} and interact with
+     * {@link Storage} in the same way. The only difference is output handling—no console
+     * printing should occur here. Instead, produce the message using the analogous
+     * {@link Gui} methods (which mirror {@link Ui} but return strings) and return the
+     * resulting text for the caller to render.
+     * Callers may consult {@link #isExit} to decide whether to terminate afterward.
+     * </p>
+     *
+     * @param taskList the task list the command operates on
+     * @param gui      the GUI facade (same API as {@link Ui} but methods return strings)
+     * @param storage  the storage handler used to load and save task data
+     * @return the message to display in the GUI (may be multi-line)
+     * @throws BarryException if a command-specific error occurs during execution
+     * @see #execute(TaskList, Ui, Storage)
+     */
     public abstract String execute(TaskList taskList, Gui gui, Storage storage) throws BarryException;
 }

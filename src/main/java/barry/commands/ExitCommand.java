@@ -39,10 +39,18 @@ public class ExitCommand extends Command {
         storage.save(taskList);
     }
 
+    /**
+     * Semantics are identical to {@link #execute(TaskList, Ui, Storage)}.
+     *
+     * @param taskList the task list to be saved before exit
+     * @param gui      the GUI facade (analogous to {@link Ui} but returning strings)
+     * @param storage  the storage handler used to persist the task list
+     * @return the farewell message to display in the GUI
+     */
     @Override
     public String execute(TaskList taskList, Gui gui, Storage storage) {
         storage.save(taskList);
-        return "Goodbye, have a nice day!";
+        return gui.printGoodbye();
     }
 
     @Override

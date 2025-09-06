@@ -40,6 +40,14 @@ public class ListCommand extends Command {
         ui.printListTask(taskList.listTasks());
     }
 
+    /**
+     * Semantics are identical to {@link #execute(TaskList, Ui, Storage)}.
+     *
+     * @param taskList the task list containing tasks to be listed
+     * @param gui      the GUI facade (analogous to {@link Ui} but returning strings)
+     * @param storage  the storage handler (not used in this command, required by signature)
+     * @return the formatted list of tasks for display in the GUI
+     */
     @Override
     public String execute(TaskList taskList, Gui gui, Storage storage) {
         return gui.printListTask(taskList.listTasks());

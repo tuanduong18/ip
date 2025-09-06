@@ -50,6 +50,14 @@ public class HelpCommand extends Command {
         }
     }
 
+    /**
+     * Semantics are identical to {@link #execute(TaskList, Ui, Storage)}.
+     *
+     * @param taskList the task list (not used in this command, required by signature)
+     * @param gui      the GUI facade (analogous to {@link Ui} but returning strings)
+     * @param storage  the storage handler (not used in this command, required by signature)
+     * @return the help message text (concise or detailed, depending on {@code isDetailed})
+     */
     @Override
     public String execute(TaskList taskList, Gui gui, Storage storage) {
         if (isDetailed) {

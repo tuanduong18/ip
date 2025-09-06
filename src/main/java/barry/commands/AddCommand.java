@@ -46,6 +46,14 @@ public class AddCommand extends Command {
         ui.printAddTask(task.toString(), taskList.size());
     }
 
+    /**
+     * Semantics are identical to {@link #execute(TaskList, Ui, Storage)}
+     *
+     * @param taskList the task list to which the task will be added
+     * @param gui      the GUI facade (analogous to {@link Ui} but returning strings)
+     * @param storage  the storage handler used to persist the task list
+     * @return the confirmation message including the added task and updated count
+     */
     @Override
     public String execute(TaskList taskList, Gui gui, Storage storage) {
         taskList.addTask(task);
