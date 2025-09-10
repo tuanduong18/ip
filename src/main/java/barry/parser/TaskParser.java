@@ -36,7 +36,7 @@ import barry.tasks.Todo;
  * <h3>Validation &amp; errors</h3>
  * <ul>
  *   <li>Empty descriptions or missing timestamps result in a {@link BarryException} with a
- *       user-friendly message (e.g., “missing ...”).</li>
+ *       user-friendly message</li>
  *   <li>Timestamps must follow {@link #DATE_FORMAT} exactly; otherwise a {@link BarryException}
  *       describing the expected format is thrown.</li>
  *   <li>If the input does not match any supported task pattern, a generic invalid-command
