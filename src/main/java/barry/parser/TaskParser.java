@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
-import barry.data.common.CommandType;
+import barry.data.common.Formats;
 import barry.data.common.TaskRegex;
 import barry.data.exceptions.BarryException;
 import barry.tasks.Deadline;
@@ -20,108 +20,142 @@ import barry.tasks.Todo;
 /**
  * Parses raw task-creation commands into concrete {@link Task} instances.
  * <p>
- * {@code TaskParser} delegates the syntactic recognition to {@link TaskRegex},
- * extracts the captured components (e.g., description and timestamps), validates
- * required fields, and constructs the appropriate {@link Todo}, {@link Deadline},
- * or {@link Event}.
+ * The {@code TaskParser} delegates syntax recognition to {@link TaskRegex},
+ * validates required fields, enforces date formats, and constructs the
+ * appropriate {@link Todo}, {@link Deadline}, or {@link Event}.
+ * Command timestamps must use the {@code dd/MM/yyyy HH:mm} pattern
+ * (see {@link Formats#CMD_DATETIME}).
  * </p>
  *
  * <h3>Supported forms</h3>
  * <ul>
- *   <li><b>TODO</b> — {@code todo {description}}</li>
- *   <li><b>DEADLINE</b> — {@code deadline {description} /by {dd/MM/yyyy HH:mm}}</li>
- *   <li><b>EVENT</b> — {@code event {description} /from {dd/MM/yyyy HH:mm} /to {dd/MM/yyyy HH:mm}}</li>
+ *   <li>{@code todo &lt;description&gt;}</li>
+ *   <li>{@code deadline &lt;description&gt; /by &lt;dd/MM/yyyy HH:mm&gt;}</li>
+ *   <li>{@code event &lt;description&gt; /from &lt;dd/MM/yyyy HH:mm&gt; /to &lt;dd/MM/yyyy HH:mm&gt;}</li>
  * </ul>
  *
- * <h3>Validation &amp; errors</h3>
- * <ul>
- *   <li>Empty descriptions or missing timestamps result in a {@link BarryException} with a
- *       user-friendly message</li>
- *   <li>Timestamps must follow {@link #DATE_FORMAT} exactly; otherwise a {@link BarryException}
- *       describing the expected format is thrown.</li>
- *   <li>If the input does not match any supported task pattern, a generic invalid-command
- *       {@link BarryException} is thrown, optionally hinting valid task commands.</li>
- * </ul>
- *
- * <h3>Examples</h3>
- * <pre>{@code
- * Task t1 = TaskParser.parseTask("todo Read CS2103T notes");
- * Task t2 = TaskParser.parseTask("deadline iP /by 30/08/2025 16:00");
- * Task t3 = TaskParser.parseTask("event Splashdown /from 27/08/2025 18:00 /to 27/08/2025 21:00");
- * }</pre>
+ * <p>
+ * If required components are missing or timestamps are malformed, a
+ * {@link BarryException} with a user-friendly message is thrown.
+ * </p>
  */
 public class TaskParser {
-    /**
-     * The expected timestamp pattern for {@code /by}, {@code /from}, and {@code /to} fields.
-     * Example: {@code 30/08/2025 16:00}.
-     */
-    static final String DATE_FORMAT = "dd/MM/yyyy HH:mm";
 
     /**
-     * Parses a full task command line into a concrete {@link Task}.
+     * Formatter for command timestamps (e.g., {@code 30/08/2025 16:00}).
+     */
+    private static final DateTimeFormatter CMD_FMT = DateTimeFormatter.ofPattern(Formats.CMD_DATETIME);
+
+    /**
+     * Parses a full task command line and produces a concrete {@link Task}.
      * <p>
      * Steps:
      * <ol>
-     *   <li>Determine the task type using {@link TaskRegex#parseTask(String)}.</li>
-     *   <li>Extract the captured components in order (description, then any timestamps).</li>
-     *   <li>Validate required components and timestamp formats via {@link DateTimeFormatter}.</li>
-     *   <li>Instantiate and return the corresponding {@link Task} subtype.</li>
+     *   <li>Identify the task pattern via {@link TaskRegex#parseTask(String)}.</li>
+     *   <li>Extract components (description and timestamps) using
+     *       {@link TaskRegex#extractComponents(String)}.</li>
+     *   <li>Dispatch to a type-specific parser that validates inputs and builds the task.</li>
      * </ol>
      * </p>
      *
      * @param command the raw task command (e.g., {@code "deadline iP /by 30/08/2025 16:00"})
-     * @return a {@link Todo}, {@link Deadline}, or {@link Event} constructed from the input
-     * @throws BarryException if the input does not match any supported pattern,
-     *                        required fields are missing, or timestamps are malformed
+     * @return a {@link Todo}, {@link Deadline}, or {@link Event} created from the input
+     * @throws BarryException if the command does not match a supported pattern,
+     *                        a required field is missing, or a timestamp is invalid
      */
     public static Task parseTask(String command) throws BarryException {
-        TaskRegex t = TaskRegex.parseTask(command); // This line can throw Barry.Barry Exception
-        ArrayList<String> params = t.extractComponents(command); // Extract parameters
-        String description = params.get(0);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+        TaskRegex t = TaskRegex.parseTask(command); // may throw BarryException
+        ArrayList<String> p = t.extractComponents(command);
 
-        switch (t) {
-        case TODO:
-            if (description.trim().isEmpty()) {
-                throw BarryException.missingTaskDescription(TODO);
-            }
-            return new Todo(description);
-        case DEADLINE:
-            if (description.trim().isEmpty()) {
-                throw BarryException.missingTaskDescription(DEADLINE);
-            } else if (params.get(1).trim().isEmpty()) {
-                throw BarryException.missingTimestamp(DEADLINE, "due date");
-            }
-            LocalDateTime due;
-            try {
-                due = LocalDateTime.parse(params.get(1).trim(), formatter);
-            } catch (DateTimeParseException e) {
-                throw BarryException.invalidTimestamp(DEADLINE, "due date", DATE_FORMAT);
-            }
-            return new Deadline(description, due);
-        case EVENT:
-            if (description.trim().isEmpty()) {
-                throw BarryException.missingTaskDescription(EVENT);
-            } else if (params.get(1).trim().isEmpty()) {
-                throw BarryException.missingTimestamp(EVENT, "starting time");
-            } else if (params.get(2).trim().isEmpty()) {
-                throw BarryException.missingTimestamp(EVENT, "ending time");
-            }
-            LocalDateTime start;
-            LocalDateTime end;
-            try {
-                start = LocalDateTime.parse(params.get(1), formatter);
-            } catch (DateTimeParseException e) {
-                throw BarryException.invalidTimestamp(EVENT, "start time", DATE_FORMAT);
-            }
-            try {
-                end = LocalDateTime.parse(params.get(2), formatter);
-            } catch (DateTimeParseException e) {
-                throw BarryException.invalidTimestamp(EVENT, "end time", DATE_FORMAT);
-            }
-            return new Event(description, start, end);
-        default:
-            throw BarryException.commandException(new CommandType[]{TODO, DEADLINE, EVENT});
+        return switch (t) {
+        case TODO -> parseTodo(p);
+        case DEADLINE -> parseDeadline(p);
+        case EVENT -> parseEvent(p);
+        };
+    }
+
+    /**
+     * Builds a {@link Todo} from extracted components.
+     *
+     * @param p the extracted components; {@code p.get(0)} is the description
+     * @return a new {@link Todo}
+     * @throws BarryException if the description is empty
+     */
+    private static Task parseTodo(ArrayList<String> p) throws BarryException {
+        String desc = p.get(0).trim();
+        if (desc.isEmpty()) {
+            throw BarryException.missingTaskDescription(TODO);
+        }
+        return new Todo(desc);
+    }
+
+    /**
+     * Builds a {@link Deadline} from extracted components.
+     *
+     * @param p the extracted components; {@code p.get(0)} is description, {@code p.get(1)} is {@code /by}
+     * @return a new {@link Deadline}
+     * @throws BarryException if the description is empty, due date is missing, or the date is invalid
+     */
+    private static Task parseDeadline(ArrayList<String> p) throws BarryException {
+        String desc = p.get(0).trim();
+        String by = p.get(1).trim();
+
+        if (desc.isEmpty()) {
+            throw BarryException.missingTaskDescription(DEADLINE);
+        }
+        if (by.isEmpty()) {
+            throw BarryException.missingTimestamp(DEADLINE, "due date");
+        }
+
+        LocalDateTime due = parseDateStrict(by, DEADLINE, "due date");
+        return new Deadline(desc, due);
+    }
+
+    /**
+     * Builds an {@link Event} from extracted components.
+     *
+     * @param p the extracted components; {@code p.get(0)} is description,
+     *          {@code p.get(1)} is {@code /from}, {@code p.get(2)} is {@code /to}
+     * @return a new {@link Event}
+     * @throws BarryException if the description is empty, a timestamp is missing, or a date is invalid
+     */
+    private static Task parseEvent(ArrayList<String> p) throws BarryException {
+        String desc = p.get(0).trim();
+        String from = p.get(1).trim();
+        String to = p.get(2).trim();
+
+        if (desc.isEmpty()) {
+            throw BarryException.missingTaskDescription(EVENT);
+        }
+        if (from.isEmpty()) {
+            throw BarryException.missingTimestamp(EVENT, "starting time");
+        }
+        if (to.isEmpty()) {
+            throw BarryException.missingTimestamp(EVENT, "ending time");
+        }
+
+        LocalDateTime start = parseDateStrict(from, EVENT, "start time");
+        LocalDateTime end = parseDateStrict(to, EVENT, "end time");
+        return new Event(desc, start, end);
+    }
+
+    /**
+     * Parses a timestamp using the strict command format and maps parse failures
+     * to a {@link BarryException} with a helpful message.
+     *
+     * @param raw   the raw timestamp text (e.g., {@code 30/08/2025 16:00})
+     * @param type  the command type used for error messaging context
+     * @param label a label describing the timestamp’s role (e.g., {@code "due date"})
+     * @return the parsed {@link LocalDateTime}
+     * @throws BarryException if the timestamp is not in {@link Formats#CMD_DATETIME} format
+     */
+    private static LocalDateTime parseDateStrict(String raw, barry.data.common.CommandType type, String label)
+            throws BarryException {
+        try {
+            return LocalDateTime.parse(raw, CMD_FMT);
+        } catch (DateTimeParseException e) {
+            throw BarryException.invalidTimestamp(type, label, Formats.CMD_DATETIME);
         }
     }
+
 }
