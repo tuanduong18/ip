@@ -50,6 +50,7 @@ public class Decode {
         try {
             String type = cmd[0];
             String marked = cmd[1];
+            assert "0".equals(marked) || "1".equals(marked) : "status must be 0 or 1";
             String name = cmd[2];
             switch (type) {
             case "T":
@@ -69,6 +70,7 @@ public class Decode {
                 t.setStatus(marked.equals("1"));
                 break;
             default:
+                assert false : "unreachable: unknown record type " + type;
                 throw new BarryException("Invalid data source");
             }
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {

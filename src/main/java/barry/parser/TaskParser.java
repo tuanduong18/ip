@@ -82,11 +82,13 @@ public class TaskParser {
 
         switch (t) {
         case TODO:
+            assert params.size() == 1 : "todo has 1 component: description";
             if (description.trim().isEmpty()) {
                 throw BarryException.missingTaskDescription(TODO);
             }
             return new Todo(description);
         case DEADLINE:
+            assert params.size() == 2 : "deadline has 2 components: desc, /by";
             if (description.trim().isEmpty()) {
                 throw BarryException.missingTaskDescription(DEADLINE);
             } else if (params.get(1).trim().isEmpty()) {
@@ -100,6 +102,7 @@ public class TaskParser {
             }
             return new Deadline(description, due);
         case EVENT:
+            assert params.size() == 3 : "event has 3 components: desc, /from, /to";
             if (description.trim().isEmpty()) {
                 throw BarryException.missingTaskDescription(EVENT);
             } else if (params.get(1).trim().isEmpty()) {
