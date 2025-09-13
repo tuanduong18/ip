@@ -1,4 +1,4 @@
-package barry.gui;
+package barry.javaFX;
 
 import java.io.IOException;
 import java.util.Collections;
