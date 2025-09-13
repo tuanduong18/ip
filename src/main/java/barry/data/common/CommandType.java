@@ -1,5 +1,8 @@
 package barry.data.common;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import barry.data.exceptions.BarryException;
 
 /**
@@ -83,13 +86,9 @@ public enum CommandType {
      * @return a formatted string enumerating all command tags
      */
     public static String allCommands() {
-        StringBuilder s = new StringBuilder("");
-        for (CommandType c : CommandType.values()) {
-            s.append("\t");
-            s.append(c.getType());
-            s.append("\n");
-        }
-        return s.toString();
+        return Arrays.stream(values())
+                .map(c -> "\t" + c.getType())
+                .collect(Collectors.joining("\n")) + "\n";
     }
 
     /**
@@ -102,16 +101,9 @@ public enum CommandType {
      * @return a formatted string with each command’s formula and example
      */
     public static String allCommandsDetailed() {
-        StringBuilder s = new StringBuilder("");
-        for (CommandType c : CommandType.values()) {
-            s.append("\t");
-            s.append(c.getFormula());
-            s.append("\n");
-            s.append("\t\te.g.: ");
-            s.append(c.getExample());
-            s.append("\n\n");
-        }
-        return s.toString();
+        return Arrays.stream(values())
+                .map(c -> "\t" + c.getFormula() + "\n\t\te.g.: " + c.getExample() + "\n")
+                .collect(Collectors.joining("\n"));
     }
 
     public String getType() {
