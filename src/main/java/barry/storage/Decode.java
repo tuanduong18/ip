@@ -69,6 +69,7 @@ public class Decode {
             case EVENT:
                 return decodeEvent(content);
             default:
+                assert false : "unreachable: unknown record type " + type;
                 throw new BarryException("Invalid data source");
             }
         } catch (ArrayIndexOutOfBoundsException | DateTimeParseException e) {

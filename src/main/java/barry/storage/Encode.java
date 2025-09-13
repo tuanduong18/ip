@@ -68,7 +68,6 @@ public class Encode {
      */
     public static String encode(String task) {
         char type = task.charAt(TYPE_POS);
-
         switch (type) {
         case TODO:
             return encodeTodo(task);
