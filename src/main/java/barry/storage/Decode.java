@@ -2,7 +2,9 @@ package barry.storage;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
+import barry.data.common.Formats;
 import barry.data.exceptions.BarryException;
 import barry.tasks.Deadline;
 import barry.tasks.Event;
@@ -32,49 +34,100 @@ import barry.tasks.Todo;
  * }</pre>
  */
 public class Decode {
+    private static final String SEP = " \\| ";
+
+    private static final char TODO = 'T';
+    private static final char DEADLINE = 'D';
+    private static final char EVENT = 'E';
+
+    private static final DateTimeFormatter STORED_FMT =
+            DateTimeFormatter.ofPattern(Formats.CMD_DATETIME);
     /**
-     * Decodes a pipe-delimited record into a {@link Task} and applies its completion status.
+     * Parses a persisted record line into a {@link Task} and applies its completion status.
      * <p>
-     * The method splits the input into at most five fields (to preserve the trailing time field for events),
-     * constructs the appropriate task subtype, and sets the done/undone status based on the second field.
+     * The first character determines the task subtype ({@code T}, {@code D}, or {@code E}).
+     * The line is then split into fields, date values (if any) are parsed using
+     * {@link Formats#CMD_DATETIME}, and the corresponding {@link Task} implementation is created.
      * </p>
      *
      * @param content the persisted record line (e.g., {@code "D | 1 | iP | 30/08/2025 16:00"})
      * @return a {@link Todo}, {@link Deadline}, or {@link Event} representing the decoded record
-     * @throws BarryException if the line is malformed, contains an unknown type, or has an invalid date
+     * @throws BarryException if the type code is unknown, the record structure is malformed,
+     *                        or a timestamp cannot be parsed
      */
     public static Task decode(String content) throws BarryException {
-        Task t;
-        String[] cmd = content.split(" \\| ", 5);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        if (content == null || content.isBlank()) {
+            throw BarryException.invalidSourceFilePath();
+        }
+        char type = content.charAt(0);
         try {
-            String type = cmd[0];
-            String marked = cmd[1];
-            String name = cmd[2];
             switch (type) {
-            case "T":
-                t = new Todo(name);
-                t.setStatus(marked.equals("1"));
-                break;
-            case "D":
-                String by = cmd[3];
-                LocalDateTime due = LocalDateTime.parse(by, formatter);
-                t = new Deadline(name, due);
-                t.setStatus(marked.equals("1"));
-                break;
-            case "E":
-                LocalDateTime start = LocalDateTime.parse(cmd[3], formatter);
-                LocalDateTime end = LocalDateTime.parse(cmd[4], formatter);
-                t = new Event(name, start, end);
-                t.setStatus(marked.equals("1"));
-                break;
+            case TODO:
+                return decodeTodo(content);
+            case DEADLINE:
+                return decodeDeadline(content);
+            case EVENT:
+                return decodeEvent(content);
             default:
                 throw new BarryException("Invalid data source");
             }
-        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+        } catch (ArrayIndexOutOfBoundsException | DateTimeParseException e) {
             // Should not go to this line
             throw BarryException.invalidSourceFilePath();
         }
+    }
+
+    /**
+     * Decodes a {@code Todo} record of the form {@code T | <0|1> | <description>}.
+     *
+     * @param content the persisted record line
+     * @return a populated {@link Todo} with status applied
+     */
+    private static Task decodeTodo(String content) {
+        String[] cmd = content.split(SEP, 3);
+        String marked = cmd[1];
+        String name = cmd[2];
+        Task t = new Todo(name);
+        t.setStatus(marked.equals("1"));
+        return t;
+    }
+
+    /**
+     * Decodes a {@code Deadline} record of the form
+     * {@code D | <0|1> | <description> | <dd/MM/yyyy HH:mm>}.
+     *
+     * @param content the persisted record line
+     * @return a populated {@link Deadline} with status applied
+     * @throws java.time.format.DateTimeParseException if the timestamp is not in the expected format
+     */
+    private static Task decodeDeadline(String content) {
+        String[] cmd = content.split(SEP, 4);
+        String marked = cmd[1];
+        String name = cmd[2];
+        String by = cmd[3];
+        LocalDateTime due = LocalDateTime.parse(by, STORED_FMT);
+        Task t = new Deadline(name, due);
+        t.setStatus(marked.equals("1"));
+        return t;
+    }
+
+    /**
+     * Decodes an {@code Event} record of the form
+     * {@code E | <0|1> | <description> | <start> | <end>} where timestamps use
+     * {@link Formats#CMD_DATETIME}.
+     *
+     * @param content the persisted record line
+     * @return a populated {@link Event} with status applied
+     * @throws java.time.format.DateTimeParseException if either timestamp is not in the expected format
+     */
+    private static Task decodeEvent(String content) {
+        String[] cmd = content.split(SEP, 5);
+        String marked = cmd[1];
+        String name = cmd[2];
+        LocalDateTime start = LocalDateTime.parse(cmd[3], STORED_FMT);
+        LocalDateTime end = LocalDateTime.parse(cmd[4], STORED_FMT);
+        Task t = new Event(name, start, end);
+        t.setStatus(marked.equals("1"));
         return t;
     }
 }
