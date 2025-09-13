@@ -1,6 +1,7 @@
 package barry.data;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import barry.tasks.Task;
 
@@ -84,11 +85,9 @@ public class TaskList {
      * @return an {@link ArrayList} of {@code toString()} values for each task
      */
     public ArrayList<String> listTasks() {
-        ArrayList<String> s = new ArrayList<>();
-        for (Task t : taskList) {
-            s.add(t.toString());
-        }
-        return s;
+        return taskList.stream()
+                .map(Task::toString)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -99,13 +98,10 @@ public class TaskList {
      * @return an {@link ArrayList} of matching tasks’ {@code toString()} values
      */
     public ArrayList<String> findMatchingTasks(String pattern) {
-        ArrayList<String> s = new ArrayList<>();
-        for (Task t : taskList) {
-            if (t.getDescription().toLowerCase().contains(pattern.toLowerCase())) {
-                s.add(t.toString());
-            }
-        }
-        return s;
+        return taskList.stream()
+                .filter(t -> t.getDescription().toLowerCase().contains(pattern.toLowerCase()))
+                .map(Task::toString)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
 }

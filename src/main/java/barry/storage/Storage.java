@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import barry.data.TaskList;
 import barry.data.exceptions.BarryException;
@@ -85,14 +86,13 @@ public class Storage {
      * @param taskList the tasks to be persisted
      */
     public void save(TaskList taskList) {
-        StringBuilder s = new StringBuilder();
-        for (String t : taskList.listTasks()) {
-            s.append(Encode.encode(t));
-        }
+        String payload = taskList.listTasks().stream()
+                .map(Encode::encode)
+                .collect(Collectors.joining());
         try {
             File f = filePath.toFile();
             FileWriter fw = new FileWriter(f);
-            fw.write(s.toString());
+            fw.write(payload);
             fw.close();
         } catch (IOException e) {
             System.out.println("Something went wrong: " + e.getMessage());
