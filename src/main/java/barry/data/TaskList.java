@@ -66,6 +66,7 @@ public class TaskList {
      * @throws IndexOutOfBoundsException if {@code index} is out of range
      */
     public String markTask(int index, boolean marked) {
+        assert index >= 0 && index < taskList.size() : "index out of bounds";
         this.taskList.get(index).setStatus(marked);
         return taskList.get(index).toString();
     }

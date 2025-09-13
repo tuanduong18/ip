@@ -48,6 +48,7 @@ public class Encode {
     public static String encode(String task) {
         StringBuilder s = new StringBuilder();
         char type = task.charAt(1);
+        assert type == 'T' || type == 'D' || type == 'E' : "unknown task type";
         boolean marked = task.charAt(4) == 'X';
         String command = task.substring(7);
         DateTimeFormatter appearanceFormatter = DateTimeFormatter.ofPattern("h:mm a d MMM, yyyy");

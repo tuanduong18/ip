@@ -52,16 +52,27 @@ public class CommandParser {
     public Command parseCommand(String fullCommand) throws BarryException {
         CommandRegex c = CommandRegex.parseCommand(fullCommand); // Can throw BarryException
         ArrayList<String> params = c.extractComponents(fullCommand);
-        return switch (c) {
-        case TODO, DEADLINE, EVENT -> addTask(fullCommand);
-        case MARK, UNMARK -> markTask(params.get(0), params.get(1));
-        case DELETE -> deleteTask(params.get(1));
-        case LIST -> listTask();
-        case FIND -> findTask(params.get(1));
-        case BYE -> new ExitCommand();
-        case HELP-> help(fullCommand);
-        default -> throw BarryException.commandException();
-        };
+        switch (c) {
+        case TODO, DEADLINE, EVENT:
+            return addTask(fullCommand);
+        case MARK, UNMARK:
+            assert params.size() >= 2 : "mark/unmark requires an index";
+            return markTask(params.get(0), params.get(1));
+        case DELETE:
+            assert params.size() == 2 : "delete requires exactly one index";
+            return deleteTask(params.get(1));
+        case LIST:
+            return listTask();
+        case FIND:
+            assert params.size() == 2 : "find requires a pattern";
+            return findTask(params.get(1));
+        case BYE:
+            return new ExitCommand();
+        case HELP:
+            return help(fullCommand);
+        default:
+            throw BarryException.commandException();
+        }
     }
 
     /**
