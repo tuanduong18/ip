@@ -2,6 +2,8 @@ package barry.parser;
 
 import java.util.ArrayList;
 
+import barry.alias.AliasExpander;
+import barry.alias.AliasStorage;
 import barry.commands.AddCommand;
 import barry.commands.Command;
 import barry.commands.DeleteCommand;
@@ -25,6 +27,12 @@ import barry.tasks.Task;
  * </p>
  */
 public class CommandParser {
+    private final AliasStorage aliasStorage = new AliasStorage();
+    private final AliasExpander aliasExpander = new AliasExpander(aliasStorage);
+
+    public CommandParser() {
+        aliasStorage.load();
+    }
 
     /**
      * Parses a full command line and returns the corresponding {@link Command}.
@@ -50,11 +58,12 @@ public class CommandParser {
      *                        or required arguments are missing/invalid
      */
     public Command parseCommand(String fullCommand) throws BarryException {
-        CommandRegex c = CommandRegex.parseCommand(fullCommand); // Can throw BarryException
-        ArrayList<String> params = c.extractComponents(fullCommand);
+        String expanded = aliasExpander.expand(fullCommand);
+        CommandRegex c = CommandRegex.parseCommand(expanded); // Can throw BarryException
+        ArrayList<String> params = c.extractComponents(expanded);
         switch (c) {
         case TODO, DEADLINE, EVENT:
-            return addTask(fullCommand);
+            return addTask(expanded);
         case MARK, UNMARK:
             assert params.size() >= 2 : "mark/unmark requires an index";
             return markTask(params.get(0), params.get(1));
@@ -69,7 +78,7 @@ public class CommandParser {
         case BYE:
             return new ExitCommand();
         case HELP:
-            return help(fullCommand);
+            return help(expanded);
         default:
             throw BarryException.commandException();
         }
@@ -150,9 +159,8 @@ public class CommandParser {
      *
      * @param command either {@code "help"} or {@code "help --details"}
      * @return a new {@link HelpCommand} with the appropriate verbosity flag
-     * @throws BarryException never thrown in current implementation
      */
-    public Command help(String command) throws BarryException {
+    public Command help(String command) {
         return new HelpCommand(command.equals("help --details"));
     }
 
