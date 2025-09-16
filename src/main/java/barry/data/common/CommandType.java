@@ -36,7 +36,8 @@ public enum CommandType {
     FIND("find", "find {description}", "find book"),
     BYE("bye", "bye", "bye"),
     HELP("help", "help", "help"),
-    DETAILED_HELP("help --details", "help --details", "help --details");
+    DETAILED_HELP("help --details", "help --details", "help --details"),
+    ALIASES("alias", "alias", "alias");
 
 
     private final String type;

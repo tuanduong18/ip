@@ -28,7 +28,8 @@ public enum CommandRegex {
     DELETE("delete", Pattern.compile("delete ([0-9]+)")),
     FIND("find", Pattern.compile("find (.*)")),
     HELP("help", Pattern.compile("help( --details|)")),
-    BYE("bye", Pattern.compile("bye"));
+    BYE("bye", Pattern.compile("bye")),
+    ALIAS("alias", Pattern.compile("alias"));
 
     private final String tag;
     private final Pattern pattern;

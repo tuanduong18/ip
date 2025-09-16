@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import barry.alias.AliasExpander;
 import barry.alias.AliasStorage;
 import barry.commands.AddCommand;
+import barry.commands.AliasHelp;
 import barry.commands.Command;
 import barry.commands.DeleteCommand;
 import barry.commands.ExitCommand;
@@ -79,6 +80,8 @@ public class CommandParser {
             return new ExitCommand();
         case HELP:
             return help(expanded);
+        case ALIAS:
+            return showAlias();
         default:
             throw BarryException.commandException();
         }
@@ -172,7 +175,10 @@ public class CommandParser {
      * @return a new {@link FindCommand} configured with the pattern
      */
     public Command findTask(String pattern) {
-
         return new FindCommand(pattern);
+    }
+
+    public Command showAlias() {
+        return new AliasHelp();
     }
 }

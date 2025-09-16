@@ -1,6 +1,7 @@
 package barry.ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import barry.data.common.CommandType;
 
@@ -181,6 +182,14 @@ public class Gui {
         for (String item : taskList) {
             s.add("\t" + i + "." + item);
             i++;
+        }
+        return this.print(s);
+    }
+
+    public String printAliases(HashMap<String, String> aliases) {
+        ArrayList<String> s = new ArrayList<>();
+        for (String key: aliases.keySet()) {
+            s.add(key + " = " + aliases.get(key));
         }
         return this.print(s);
     }
