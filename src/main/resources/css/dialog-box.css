@@ -1,30 +1,44 @@
+/* Base bubble label */
 .label {
     -fx-background-color: linear-gradient(to bottom right, #00ffbf, #00ddff);
     -fx-border-color: #d55e00 #009e73 #cc79a7 #0072b2;
     -fx-border-width: 2px;
-    -fx-background-radius: 1em 1em 0 1em;
-    -fx-border-radius: 1em 1em 0 1em;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-padding: 8 12;
+    -fx-wrap-text: true;
+    -fx-max-width: 520px; /* wrap long bot replies nicely */
 }
 
+/* User bubble (asymmetry) */
+.user-label {
+    -fx-background-color: -accent;
+    -fx-text-fill: white;
+    -fx-background-radius: 14 14 0 14; /* tail on left */
+    -fx-border-radius: 14 14 0 14;
+}
+
+/* Bot bubble (asymmetry) */
 .reply-label {
-    -fx-background-radius: 1em 1em 1em 0;
-    -fx-border-radius: 1em 1em 1em 0;
+    -fx-background-color: -accent-weak;
+    -fx-text-fill: #0f172a;
+    -fx-background-radius: 14 14 14 0; /* tail on right */
+    -fx-border-radius: 14 14 14 0;
 }
 
-#displayPicture {
-    /* Shadow effect on image. */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 5, 5);
+/* Error bubble (ii) highlight errors clearly */
+.error-label {
+    -fx-background-color: -error-bg;
+    -fx-border-color: -error-border;
+    -fx-text-fill: -error-fg;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+}
 
-    /* Change size of image. */
+/* Avatar polish (v) */
+#displayPicture {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 12, 0.5, 2, 2);
+    -fx-clip-shape: "circle"; /* if you switch to Circle clip in code, this is ignored */
     -fx-scale-x: 1;
     -fx-scale-y: 1;
-
-    /* Rotate image clockwise by degrees. */
-    -fx-rotate: 0;
 }
-
-.reply-label {
-    -fx-background-radius: 1em 1em 1em 0;
-    -fx-border-radius: 1em 1em 1em 0;
-}
-

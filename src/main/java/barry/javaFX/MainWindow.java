@@ -1,6 +1,10 @@
 package barry.javaFX;
 
+import java.util.ArrayList;
+
 import barry.Barry;
+import barry.data.exceptions.BarryException;
+import barry.ui.Gui;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -33,6 +37,9 @@ public class MainWindow extends AnchorPane {
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        // Ensure the window is resizable-friendly
+        scrollPane.setFitToWidth(true);
+        dialogContainer.setFillWidth(true);
     }
 
     /** Injects the Source.Duke instance */
@@ -47,11 +54,10 @@ public class MainWindow extends AnchorPane {
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
-        String response = barry.getResponse(input);
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getDukeDialog(response, dukeImage)
-        );
+        if (input == null || input.isBlank()) {
+            return;
+        }
+
         userInput.clear();
 
         if (input.equals("bye")) {
@@ -60,6 +66,22 @@ public class MainWindow extends AnchorPane {
                 Platform.exit();
             });
             delay.play();
+        }
+
+        try {
+            String response = barry.getResponse(input); // or your parser/execute path
+            dialogContainer.getChildren().addAll(
+                    DialogBox.getUserDialog(input, userImage),
+                    DialogBox.getDukeDialog(response, dukeImage)
+            );
+        } catch (BarryException e) {
+            ArrayList<String> s = new ArrayList<>();
+            s.add("OOPS!!! " + e.getMessage());
+            Gui gui = new Gui();
+            dialogContainer.getChildren().addAll(
+                    DialogBox.getUserDialog(input, userImage),
+                    DialogBox.getDukeDialog(gui.print(s), dukeImage)
+            );
         }
     }
 }

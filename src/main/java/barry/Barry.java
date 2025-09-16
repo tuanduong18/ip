@@ -97,15 +97,11 @@ public class Barry {
         ui.printGoodbye();
     }
 
-    public String getResponse(String input) {
-        try {
-            Command c = parser.parseCommand(input);
-            return c.execute(taskList, gui, storage);
-        } catch (BarryException e) {
-            ArrayList<String> s = new ArrayList<>();
-            s.add("OOPS!!! " + e.getMessage());
-            return gui.print(s);
-        }
+    public String getResponse(String input) throws BarryException {
+
+        Command c = parser.parseCommand(input);
+        return c.execute(taskList, gui, storage);
+
     }
 
     public String getGreeting() {

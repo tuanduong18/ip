@@ -1,13 +1,22 @@
+/* ===== Root/theme ===== */
 .root {
-    main-color: rgb(237, 255, 242);
-        -fx-background-color: main-color;
-        -fx-background-image: url("../images/background.jpg"); /* Set image */
-        -fx-background-size: cover;
+    -main-color: rgb(237, 255, 242);          /* looked-up color (note leading '-') */
+    -accent: #2563eb;
+    -accent-weak: #f2f4f7;
+    -error-bg: #fee2e2;
+    -error-border: #ef4444;
+    -error-fg: #7f1d1d;
+
+    -fx-background-color: -main-color;
+    -fx-background-image: url("../images/background.jpg");
+    -fx-background-size: cover;
 }
 
+/* ===== Inputs/Buttons ===== */
 .text-field {
     -fx-background-color: #d9ffe2;
-    -fx-font: 20px "Arial";
+    -fx-font-size: 20px;
+    -fx-font-family: "Arial";
 }
 
 .text-field .text {
@@ -18,27 +27,38 @@
 
 .button {
     -fx-background-color: mediumspringgreen;
-    -fx-font: italic bold 16px "Arial";
+    -fx-font-size: 16px;
+    -fx-font-style: italic;
+    -fx-font-weight: bold;
+    -fx-font-family: "Arial";
 }
 
 .button:hover {
-    -fx-background-color:cyan;
+    -fx-background-color: cyan;
     -fx-font-size: 18px;
 }
 
 .button:pressed {
-    -fx-background-color:orange;
+    -fx-background-color: orange;
     -fx-font-size: 20px;
 }
 
+/* ===== ScrollPane (space-efficient) ===== */
 .scroll-pane,
 .scroll-pane .viewport {
     -fx-background-color: transparent;
 }
 
-.scroll-bar {
-    -fx-font-size: 10px;  /* Change width of scroll bar. */
-    -fx-background-color: main-color;
+.scroll-pane {
+    -fx-background-color: rgba(0,0,0,0.35);   /* subtle overlay for contrast on bg image */
+}
+
+.scroll-bar:vertical {
+    -fx-pref-width: 10;
+}
+
+.scroll-bar:horizontal {
+    -fx-pref-height: 10;
 }
 
 .scroll-bar .thumb {
@@ -46,17 +66,9 @@
     -fx-background-radius: 1em;
 }
 
-/* Hides the increment and decrement buttons. */
 .scroll-bar .increment-button,
 .scroll-bar .decrement-button {
     -fx-pref-height: 0;
+    -fx-pref-width: 0;
     -fx-opacity: 0;
-}
-
-.scroll-pane {
-    -fx-background-color: rgba(0,0,0,.4);
-}
-
-.scroll-pane .viewport {
-    -fx-background-color: transparent;
 }

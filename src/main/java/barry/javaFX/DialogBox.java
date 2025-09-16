@@ -49,13 +49,26 @@ public class DialogBox extends HBox {
         dialog.getStyleClass().add("reply-label");
     }
 
-    public static DialogBox getUserDialog(String text, Image img) {
-        return new DialogBox(text, img);
+    // after loading FXML & creating the label
+    public static DialogBox getUserDialog(String text, Image iv) {
+        DialogBox db = new DialogBox(text, iv);
+        db.dialog.getStyleClass().add("user-label");
+        db.setAlignment(Pos.TOP_RIGHT);
+        return db;
     }
 
-    public static DialogBox getDukeDialog(String text, Image img) {
-        var db = new DialogBox(text, img);
+    public static DialogBox getDukeDialog(String text, Image iv) {
+        DialogBox db = new DialogBox(text, iv);
+        db.dialog.getStyleClass().add("reply-label");
+        db.setAlignment(Pos.TOP_LEFT);
         db.flip();
+        return db;
+    }
+
+    public static DialogBox getErrorDialog(String text, Image iv) {
+        DialogBox db = new DialogBox(text, iv);
+        db.dialog.getStyleClass().add("error-label");
+        db.setAlignment(Pos.TOP_LEFT);
         return db;
     }
 }
