@@ -69,7 +69,7 @@ public class Gui {
         ArrayList<String> s = new ArrayList<>();
         s.add("Got it. I've added this task:");
         s.add("\t" + task);
-        s.add("Now you have " + n + (n > 1 ? "tasks " : " task ") + "in the list.");
+        s.add("Now you have " + n + (n > 1 ? " tasks " : " task ") + "in the list.");
         return this.print(s);
     }
 
@@ -119,7 +119,7 @@ public class Gui {
         ArrayList<String> s = new ArrayList<>();
         s.add("Noted. I've removed this task:");
         s.add("\t" + task);
-        s.add("Now you have " + n + (n > 1 ? "tasks " : " task ") + "in the list.");
+        s.add("Now you have " + n + (n > 1 ? " tasks " : " task ") + "in the list.");
         return this.print(s);
     }
 
@@ -186,11 +186,32 @@ public class Gui {
         return this.print(s);
     }
 
+    /**
+     * Returns a formatted list of user-defined aliases.
+     * <p>
+     * Each alias is rendered on its own line in the form {@code <name> = <template>}.
+     * If {@code aliases} is empty, the returned string is empty.
+     * </p>
+     * <p><strong>Ordering:</strong>
+     * The output order follows the iteration order of the provided {@link HashMap},
+     * which is unspecified and may vary across runs. If you require deterministic
+     * ordering (e.g., for testing or UX consistency), copy and sort the keys before
+     * formatting (e.g., case-insensitively) and then build the lines in that order.
+     * </p>
+     *
+     * @param aliases a mapping from alias name to its expansion template
+     * @return a newline-separated string where each line is {@code name = template}
+     * @implNote This method does not sort the aliases. To produce a stable order,
+     *           consider sorting the keys first and then constructing the lines.
+     */
     public String printAliases(HashMap<String, String> aliases) {
-        ArrayList<String> s = new ArrayList<>();
-        for (String key: aliases.keySet()) {
-            s.add(key + " = " + aliases.get(key));
+        ArrayList<String> lines = new ArrayList<>();
+        ArrayList<String> keys = new ArrayList<>(aliases.keySet());
+        keys.sort(String.CASE_INSENSITIVE_ORDER); // or null for natural
+
+        for (String key : keys) {
+            lines.add(key + " = " + aliases.get(key));
         }
-        return this.print(s);
+        return this.print(lines);
     }
 }

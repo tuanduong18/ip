@@ -43,7 +43,7 @@ public class HelpCommand extends Command {
      */
     @Override
     public void execute(TaskList taskList, Ui ui, Storage storage) {
-        if (isDetailed) {
+        if (!isDetailed) {
             ui.printHelp();
         } else {
             ui.printDetailedHelp();
@@ -60,7 +60,7 @@ public class HelpCommand extends Command {
      */
     @Override
     public String execute(TaskList taskList, Gui gui, Storage storage) {
-        if (isDetailed) {
+        if (!isDetailed) {
             return gui.printHelp();
         } else {
             return gui.printDetailedHelp();

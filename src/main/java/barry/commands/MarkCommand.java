@@ -1,9 +1,9 @@
 package barry.commands;
 
-import barry.tasks.Task;
 import barry.data.TaskList;
 import barry.data.exceptions.BarryException;
 import barry.storage.Storage;
+import barry.tasks.Task;
 import barry.ui.Gui;
 import barry.ui.Ui;
 

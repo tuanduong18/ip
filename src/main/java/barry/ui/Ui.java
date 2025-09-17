@@ -83,7 +83,7 @@ public class Ui {
         ArrayList<String> s = new ArrayList<>();
         s.add("Got it. I've added this task:");
         s.add("\t" + task);
-        s.add("Now you have " + n + (n > 1 ? "tasks " : " task ") + "in the list.");
+        s.add("Now you have " + n + (n > 1 ? " tasks " : " task ") + "in the list.");
         this.print(s);
     }
 
@@ -130,7 +130,7 @@ public class Ui {
         ArrayList<String> s = new ArrayList<>();
         s.add("Noted. I've removed this task:");
         s.add("\t" + task);
-        s.add("Now you have " + n + (n > 1 ? "tasks " : " task ") + "in the list.");
+        s.add("Now you have " + n + (n > 1 ? " tasks " : " task ") + "in the list.");
         this.print(s);
     }
 
@@ -190,12 +190,28 @@ public class Ui {
         this.print(s);
     }
 
+    /**
+     * Prints a normalized listing of user-defined aliases.
+     * <p>
+     * Each alias is rendered on its own line in the form {@code <name> = <template>}.
+     * Alias names are sorted case-insensitively before printing to provide a
+     * deterministic, easy-to-scan order.
+     * </p>
+     * <p>
+     * If {@code aliases} is empty, an empty framed block is printed (no items).
+     * </p>
+     *
+     * @param aliases a mapping from alias names to their expansion templates
+     */
     public void printAliases(HashMap<String, String> aliases) {
-        ArrayList<String> s = new ArrayList<>();
-        for (String key: aliases.keySet()) {
-            s.add(key + " = " + aliases.get(key));
+        ArrayList<String> lines = new ArrayList<>();
+        ArrayList<String> keys = new ArrayList<>(aliases.keySet());
+        keys.sort(String.CASE_INSENSITIVE_ORDER); // or null for natural
+
+        for (String key : keys) {
+            lines.add(key + " = " + aliases.get(key));
         }
-        this.print(s);
+        this.print(lines);
     }
 
 }

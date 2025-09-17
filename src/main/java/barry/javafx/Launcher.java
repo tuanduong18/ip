@@ -1,4 +1,4 @@
-package barry.javaFX;
+package barry.javafx;
 
 import javafx.application.Application;
 
