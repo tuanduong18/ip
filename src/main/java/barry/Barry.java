@@ -24,7 +24,7 @@ import barry.ui.Ui;
  * </p>
  */
 public class Barry {
-    private static final Path path = Paths.get("..", "data", "Barry.txt");
+    private static final Path path = Paths.get("Barry data", "Barry.txt");
 
     // Print messages from Barry.Barry
     private final Ui ui;
@@ -118,6 +118,6 @@ public class Barry {
      * @param args command-line arguments (unused)
      */
     public static void main(String[] args) {
-        new Barry(Paths.get("..", "data", "Barry.txt")).run();
+        new Barry(path).run();
     }
 }

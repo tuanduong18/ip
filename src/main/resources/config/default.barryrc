@@ -1,0 +1,7 @@
+alias t='todo {1}'
+alias dl_sun='deadline {1} /by ${sun}'
+alias ls='list'
+alias d='delete {1}'
+alias f='find {1}'
+alias m='mark {1}'
+alias u='unmark {1}'

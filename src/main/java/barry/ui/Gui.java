@@ -208,9 +208,11 @@ public class Gui {
         ArrayList<String> lines = new ArrayList<>();
         ArrayList<String> keys = new ArrayList<>(aliases.keySet());
         keys.sort(String.CASE_INSENSITIVE_ORDER); // or null for natural
-
+        lines.add("Here are your aliases, "
+                + "{1} means the additional argument you need to type and "
+                + "${sun} means upcoming Sunday:");
         for (String key : keys) {
-            lines.add(key + " = " + aliases.get(key));
+            lines.add("\t" + key + " = " + aliases.get(key));
         }
         return this.print(lines);
     }

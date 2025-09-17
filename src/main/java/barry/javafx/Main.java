@@ -25,7 +25,7 @@ public class Main extends Application {
             Scene scene = new Scene(ap);
             stage.setScene(scene);
             fxmlLoader.<MainWindow>getController().setBarry(barry); // inject the Source.Barry instance
-            stage.setTitle("Barry — Personal Task Assistant"); // <- shows on the OS title bar
+            stage.setTitle("Barry - Personal Task Assistant"); // <- shows on the OS title bar
             stage.getIcons().add(new Image(
                     getClass().getResource("/images/DaBarry.png").toExternalForm() // optional app icon
             ));

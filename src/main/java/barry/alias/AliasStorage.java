@@ -1,13 +1,17 @@
 package barry.alias;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Scanner;
+
 
 /**
  * Loads and stores user-defined command aliases from a shell-like RC file.
@@ -34,15 +38,9 @@ import java.util.Scanner;
 public final class AliasStorage {
 
     private final HashMap<String, String> templates = new HashMap<String, String>();
-    private final Path rcPath;
+    private Path rcPath = Paths.get("Barry data", ".barryrc");
 
-    /**
-     * Creates an {@code AliasStorage} that reads from the default path {@code ~/.barryrc}.
-     */
-    public AliasStorage() {
-        this(rcDefaultPath());
-    }
-
+    public AliasStorage() {}
     /**
      * Creates an {@code AliasStorage} that reads from the given RC file path.
      *
@@ -58,11 +56,19 @@ public final class AliasStorage {
      * Existing aliases in memory are cleared first. If the file does not exist, no error is thrown.
      * </p>
      */
+    // inside AliasStorage (fields: HashMap<String,String> templates; Path rcPath; etc.)
     public void load() {
         templates.clear();
-        if (!Files.exists(rcPath)) {
+        try {
+            if (rcPath.getParent() != null) {
+                Files.createDirectories(rcPath.getParent());
+            }
+            loadDefault();
+            save();
+        } catch (IOException e) {
             return;
         }
+
         try {
             Scanner sc = new Scanner(new FileReader(rcPath.toFile()));
             while (sc.hasNextLine()) {
@@ -71,6 +77,24 @@ public final class AliasStorage {
             sc.close();
         } catch (IOException e) {
             return;
+        }
+    }
+
+    /**
+     * Load the aliases from resources/config/default.barryrc
+     */
+    private void loadDefault() {
+        try (InputStream in = getClass().getClassLoader().getResourceAsStream("config/default.barryrc")) {
+            if (in == null) {
+                return; // no bundled default available
+            }
+            try (Scanner sc = new Scanner(in, UTF_8)) {
+                while (sc.hasNextLine()) {
+                    parseLine(sc.nextLine());
+                }
+            }
+        } catch (IOException ignored) {
+            // leave templates empty if fallback read fails
         }
     }
 
@@ -148,12 +172,6 @@ public final class AliasStorage {
             return;
         }
         templates.remove(name.toLowerCase());
-    }
-
-    // ---- helpers ----
-
-    private static Path rcDefaultPath() {
-        return Paths.get("..", "data", ".barryrc");
     }
 
     /**
