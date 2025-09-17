@@ -14,7 +14,7 @@ import barry.ui.Ui;
  * message to the user via the {@link Ui}.
  * </p>
  */
-public class AddCommand extends Command {
+public class AddTask extends Command {
 
     /**
      * The task to be added to the task list.
@@ -26,7 +26,7 @@ public class AddCommand extends Command {
      *
      * @param t the task to be added to the task list
      */
-    public AddCommand(Task t) {
+    public AddTask(Task t) {
         super(false);
         this.task = t;
     }
@@ -63,8 +63,8 @@ public class AddCommand extends Command {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof AddCommand) {
-            Task t = ((AddCommand) o).task;
+        if (o instanceof AddTask) {
+            Task t = ((AddTask) o).task;
             return t.equals(this.task);
         }
         return false;

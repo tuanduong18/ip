@@ -9,14 +9,14 @@ import java.time.format.DateTimeFormatter;
 
 import org.junit.jupiter.api.Test;
 
-import barry.commands.AddCommand;
+import barry.commands.AddTask;
 import barry.commands.Command;
-import barry.commands.DeleteCommand;
-import barry.commands.ExitCommand;
-import barry.commands.FindCommand;
+import barry.commands.DeleteTask;
+import barry.commands.Exit;
+import barry.commands.FindTask;
 import barry.commands.HelpCommand;
-import barry.commands.ListCommand;
-import barry.commands.MarkCommand;
+import barry.commands.ListTasks;
+import barry.commands.MarkTask;
 import barry.data.exceptions.BarryException;
 import barry.parser.CommandParser;
 import barry.tasks.Deadline;
@@ -33,7 +33,7 @@ public class CommandParserTest {
     @Test
     void todo_parse_ok() throws BarryException {
         String input = "todo read book";
-        Command expected = new AddCommand(new Todo("read book"));
+        Command expected = new AddTask(new Todo("read book"));
         assertEquals(expected, parser.parseCommand(input));
     }
 
@@ -41,7 +41,7 @@ public class CommandParserTest {
     void deadline_parse_ok() throws BarryException {
         String input = "deadline CS2103T /by 29/08/2025 16:00";
         LocalDateTime due = LocalDateTime.parse("29/08/2025 16:00", fmt);
-        Command expected = new AddCommand(new Deadline("CS2103T", due));
+        Command expected = new AddTask(new Deadline("CS2103T", due));
         assertEquals(expected, parser.parseCommand(input));
     }
 
@@ -50,28 +50,28 @@ public class CommandParserTest {
         String input = "event Splashdown /from 27/08/2025 18:00 /to 27/08/2025 21:00";
         LocalDateTime start = LocalDateTime.parse("27/08/2025 18:00", fmt);
         LocalDateTime end = LocalDateTime.parse("27/08/2025 21:00", fmt);
-        Command expected = new AddCommand(new Event("Splashdown", start, end));
+        Command expected = new AddTask(new Event("Splashdown", start, end));
         assertEquals(expected, parser.parseCommand(input));
     }
 
     @Test
     void mark_ok() throws BarryException {
-        assertEquals(new MarkCommand(2, true), parser.parseCommand("mark 2"));
+        assertEquals(new MarkTask(2, true), parser.parseCommand("mark 2"));
     }
 
     @Test
     void unmark_ok() throws BarryException {
-        assertEquals(new MarkCommand(3, false), parser.parseCommand("unmark 3"));
+        assertEquals(new MarkTask(3, false), parser.parseCommand("unmark 3"));
     }
 
     @Test
     void delete_ok() throws BarryException {
-        assertEquals(new DeleteCommand(5), parser.parseCommand("delete 5"));
+        assertEquals(new DeleteTask(5), parser.parseCommand("delete 5"));
     }
 
     @Test
     void list_ok() throws BarryException {
-        assertEquals(new ListCommand(), parser.parseCommand("list"));
+        assertEquals(new ListTasks(), parser.parseCommand("list"));
     }
 
     @Test
@@ -86,12 +86,12 @@ public class CommandParserTest {
 
     @Test
     void find_ok() throws BarryException {
-        assertInstanceOf(FindCommand.class, parser.parseCommand("find book"));
+        assertInstanceOf(FindTask.class, parser.parseCommand("find book"));
     }
 
     @Test
     void bye_ok() throws BarryException {
-        assertInstanceOf(ExitCommand.class, parser.parseCommand("bye"));
+        assertInstanceOf(Exit.class, parser.parseCommand("bye"));
     }
 
     // -------- error cases (assert on message to avoid static-factory drift) --------

@@ -13,7 +13,7 @@ import barry.ui.Ui;
  * before the program exits. This command is always marked as an exit command.
  * </p>
  */
-public class ExitCommand extends Command {
+public class Exit extends Command {
 
     /**
      * Creates an {@code ExitCommand}.
@@ -22,7 +22,7 @@ public class ExitCommand extends Command {
      * indicating that executing it will terminate the application.
      * </p>
      */
-    public ExitCommand() {
+    public Exit() {
         super(true);
     }
 
@@ -55,6 +55,6 @@ public class ExitCommand extends Command {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof ExitCommand;
+        return o instanceof Exit;
     }
 }

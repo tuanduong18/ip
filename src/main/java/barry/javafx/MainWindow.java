@@ -36,28 +36,28 @@ import javafx.util.Duration;
  * </ul>
  */
 public class MainWindow extends AnchorPane {
-    @FXML
-    private ScrollPane scrollPane;
-
-    @FXML
-    private VBox dialogContainer;
-
-    @FXML
-    private TextField userInput;
-
-    @FXML
-    private Button sendButton;
-
-    /** Barry backend that processes user commands and produces replies. */
-    private Barry barry;
-
-    /** Avatar for the user bubbles. */
+    /**
+     * Avatar for the user bubbles.
+     */
     private final Image userImage =
             new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
-
-    /** Avatar for Barry's bubbles. */
+    /**
+     * Avatar for Barry's bubbles.
+     */
     private final Image barryImage =
             new Image(this.getClass().getResourceAsStream("/images/DaBarry.png"));
+    @FXML
+    private ScrollPane scrollPane;
+    @FXML
+    private VBox dialogContainer;
+    @FXML
+    private TextField userInput;
+    @FXML
+    private Button sendButton;
+    /**
+     * Barry backend that processes user commands and produces replies.
+     */
+    private Barry barry;
 
     /**
      * Initializes view behavior after the FXML has been loaded.

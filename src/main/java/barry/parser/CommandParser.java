@@ -4,15 +4,15 @@ import java.util.ArrayList;
 
 import barry.alias.AliasExpander;
 import barry.alias.AliasStorage;
-import barry.commands.AddCommand;
+import barry.commands.AddTask;
 import barry.commands.AliasHelp;
 import barry.commands.Command;
-import barry.commands.DeleteCommand;
-import barry.commands.ExitCommand;
-import barry.commands.FindCommand;
+import barry.commands.DeleteTask;
+import barry.commands.Exit;
+import barry.commands.FindTask;
 import barry.commands.HelpCommand;
-import barry.commands.ListCommand;
-import barry.commands.MarkCommand;
+import barry.commands.ListTasks;
+import barry.commands.MarkTask;
 import barry.data.common.CommandRegex;
 import barry.data.exceptions.BarryException;
 import barry.tasks.Task;
@@ -23,7 +23,7 @@ import barry.tasks.Task;
  * {@code CommandParser} acts as a thin coordinator:
  * it first identifies the command shape via {@link CommandRegex#parseCommand(String)},
  * then extracts any parameters and constructs the appropriate concrete command
- * (e.g., {@link AddCommand}, {@link MarkCommand}, {@link DeleteCommand}, etc.).
+ * (e.g., {@link AddTask}, {@link MarkTask}, {@link DeleteTask}, etc.).
  * This class is stateless and thread-unsafe by default.
  * </p>
  */
@@ -46,9 +46,9 @@ public class CommandParser {
      * </ol>
      * Examples:
      * <ul>
-     *   <li>{@code "todo Read book"} → {@link AddCommand}</li>
-     *   <li>{@code "mark 2"} → {@link MarkCommand}</li>
-     *   <li>{@code "find book"} → {@link FindCommand}</li>
+     *   <li>{@code "todo Read book"} → {@link AddTask}</li>
+     *   <li>{@code "mark 2"} → {@link MarkTask}</li>
+     *   <li>{@code "find book"} → {@link FindTask}</li>
      *   <li>{@code "help --details"} → {@link HelpCommand}</li>
      * </ul>
      * </p>
@@ -77,7 +77,7 @@ public class CommandParser {
             assert params.size() == 2 : "find requires a pattern";
             return findTask(params.get(1));
         case BYE:
-            return new ExitCommand();
+            return new Exit();
         case HELP:
             return help(expanded);
         case ALIAS:
@@ -88,20 +88,20 @@ public class CommandParser {
     }
 
     /**
-     * Builds an {@link AddCommand} by delegating to {@link TaskParser} to parse
+     * Builds an {@link AddTask} by delegating to {@link TaskParser} to parse
      * the task payload from the raw input.
      *
      * @param command the full add-type command (e.g., {@code "todo ..."}, {@code "deadline ..."})
-     * @return a new {@link AddCommand} wrapping the parsed {@link Task}
+     * @return a new {@link AddTask} wrapping the parsed {@link Task}
      * @throws BarryException if the task payload is invalid or missing fields
      */
     public Command addTask(String command) throws BarryException {
         Task temp = TaskParser.parseTask(command);
-        return new AddCommand(temp);
+        return new AddTask(temp);
     }
 
     /**
-     * Builds a {@link MarkCommand} for {@code mark} or {@code unmark}.
+     * Builds a {@link MarkTask} for {@code mark} or {@code unmark}.
      * <p>
      * The {@code type} should be either {@code "mark"} or {@code "unmark"} and the position
      * is the 1-based task index as a string. Number format errors are not expected here
@@ -110,13 +110,13 @@ public class CommandParser {
      *
      * @param type     the verb indicating mark/unmark
      * @param position the task index as a string
-     * @return a new {@link MarkCommand} with the parsed index and action
+     * @return a new {@link MarkTask} with the parsed index and action
      * @throws BarryException if the index cannot be parsed (unexpected) or is invalid
      */
     public Command markTask(String type, String position) throws BarryException {
         try {
             int id = Integer.parseInt(position);
-            return new MarkCommand(id, type.equals("mark"));
+            return new MarkTask(id, type.equals("mark"));
         } catch (NumberFormatException e) {
             // Should not go to this line
             throw BarryException.commandException();
@@ -124,29 +124,29 @@ public class CommandParser {
     }
 
     /**
-     * Creates a {@link ListCommand} that lists all tasks.
+     * Creates a {@link ListTasks} that lists all tasks.
      *
-     * @return a new {@link ListCommand}
+     * @return a new {@link ListTasks}
      */
     public Command listTask() {
-        return new ListCommand();
+        return new ListTasks();
     }
 
     /**
-     * Builds a {@link DeleteCommand} for the given position.
+     * Builds a {@link DeleteTask} for the given position.
      * <p>
      * Number format errors are not expected here because the input should have been
      * validated by {@link CommandRegex}.
      * </p>
      *
      * @param position the task index to delete, as a string
-     * @return a new {@link DeleteCommand} for the parsed index
+     * @return a new {@link DeleteTask} for the parsed index
      * @throws BarryException if the index cannot be parsed (unexpected) or is invalid
      */
     public Command deleteTask(String position) throws BarryException {
         try {
             int id = Integer.parseInt(position);
-            return new DeleteCommand(id);
+            return new DeleteTask(id);
         } catch (NumberFormatException e) {
             // Should not go to this line
             throw BarryException.commandException();
@@ -168,14 +168,14 @@ public class CommandParser {
     }
 
     /**
-     * Builds a {@link FindCommand} that searches for tasks whose descriptions
+     * Builds a {@link FindTask} that searches for tasks whose descriptions
      * contain the given pattern (case-insensitive).
      *
      * @param pattern the substring to search for
-     * @return a new {@link FindCommand} configured with the pattern
+     * @return a new {@link FindTask} configured with the pattern
      */
     public Command findTask(String pattern) {
-        return new FindCommand(pattern);
+        return new FindTask(pattern);
     }
 
     public Command showAlias() {

@@ -13,7 +13,7 @@ import barry.ui.Ui;
  * and it does not cause the program to exit.
  * </p>
  */
-public class ListCommand extends Command {
+public class ListTasks extends Command {
 
     /**
      * Creates a {@code ListCommand}.
@@ -22,7 +22,7 @@ public class ListCommand extends Command {
      * for this command, as listing tasks does not terminate the program.
      * </p>
      */
-    public ListCommand() {
+    public ListTasks() {
         super(false);
     }
 
@@ -55,6 +55,6 @@ public class ListCommand extends Command {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof ListCommand;
+        return o instanceof ListTasks;
     }
 }

@@ -1,10 +1,10 @@
 package barry.tasks;
 
 /**
- * Represents a task with a description and a completion status.
+ * Represents a task with a description and a completion isDone.
  * <p>
- * A {@code Task} has a description and a boolean status
- * indicating whether it is marked as completed. The status is
+ * A {@code Task} has a description and a boolean isDone
+ * indicating whether it is marked as completed. The isDone is
  * {@code false} (not completed) by default.
  * </p>
  */
@@ -19,7 +19,7 @@ public class Task {
      * The completion status of the task.
      * {@code true} if the task is completed, {@code false} otherwise.
      */
-    private boolean status = false;
+    private boolean isDone = false;
 
     /**
      * Creates a {@code Task} with the given description.
@@ -32,13 +32,13 @@ public class Task {
     }
 
     /**
-     * Updates the completion status of the task.
+     * Updates the completion isDone of the task.
      *
-     * @param status {@code true} to mark the task as completed,
+     * @param isDone {@code true} to mark the task as completed,
      *               {@code false} to mark it as uncompleted
      */
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setIsDone(boolean isDone) {
+        this.isDone = isDone;
     }
 
     /**
@@ -50,7 +50,7 @@ public class Task {
 
     /**
      * Returns a string representation of the task,
-     * showing its completion status and description.
+     * showing its completion isDone and description.
      * <ul>
      *     <li>{@code "[X] taskName"} if the task is completed</li>
      *     <li>{@code "[ ] taskName"} if the task is not completed</li>
@@ -60,7 +60,7 @@ public class Task {
      */
     @Override
     public String toString() {
-        return this.status
+        return this.isDone
                 ? "[X] " + this.description
                 : "[ ] " + this.description;
     }

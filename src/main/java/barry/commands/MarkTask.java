@@ -16,7 +16,7 @@ import barry.ui.Ui;
  * displays a confirmation message to the user via the {@link Ui}.
  * </p>
  */
-public class MarkCommand extends Command {
+public class MarkTask extends Command {
 
     /**
      * The one-based index of the task to be marked or unmarked.
@@ -36,7 +36,7 @@ public class MarkCommand extends Command {
      * @param isMarked {@code true} if the task should be marked as done,
      *                 {@code false} if the task should be unmarked
      */
-    public MarkCommand(int id, boolean isMarked) {
+    public MarkTask(int id, boolean isMarked) {
         super(false);
         this.id = id;
         this.isMarked = isMarked;
@@ -82,8 +82,8 @@ public class MarkCommand extends Command {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof MarkCommand) {
-            MarkCommand n = (MarkCommand) o;
+        if (o instanceof MarkTask) {
+            MarkTask n = (MarkTask) o;
             return n.isMarked == this.isMarked && n.id == this.id;
         }
         return false;

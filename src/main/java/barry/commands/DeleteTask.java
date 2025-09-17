@@ -16,7 +16,7 @@ import barry.ui.Ui;
  * to the user via the {@link Ui}.
  * </p>
  */
-public class DeleteCommand extends Command {
+public class DeleteTask extends Command {
 
     /**
      * The one-based index of the task to be deleted.
@@ -28,7 +28,7 @@ public class DeleteCommand extends Command {
      *
      * @param id the one-based index of the task in the task list
      */
-    public DeleteCommand(int id) {
+    public DeleteTask(int id) {
         super(false);
         this.id = id;
     }
@@ -84,8 +84,8 @@ public class DeleteCommand extends Command {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof DeleteCommand) {
-            int oId = ((DeleteCommand) o).id;
+        if (o instanceof DeleteTask) {
+            int oId = ((DeleteTask) o).id;
             return oId == id;
         }
         return false;

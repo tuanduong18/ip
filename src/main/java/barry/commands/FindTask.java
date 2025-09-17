@@ -15,7 +15,7 @@ import barry.ui.Ui;
  * It does not modify the task list or storage, and it does not cause the program to exit.
  * </p>
  */
-public class FindCommand extends Command {
+public class FindTask extends Command {
     private final String pattern;
 
 
@@ -28,7 +28,7 @@ public class FindCommand extends Command {
      *
      * @param pattern the search term or pattern used to filter tasks
      */
-    public FindCommand(String pattern) {
+    public FindTask(String pattern) {
         super(false);
         this.pattern = pattern;
     }
@@ -64,8 +64,8 @@ public class FindCommand extends Command {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof FindCommand) {
-            String p = ((FindCommand) o).pattern;
+        if (o instanceof FindTask) {
+            String p = ((FindTask) o).pattern;
             return p.equals(this.pattern);
         }
         return false;

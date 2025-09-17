@@ -82,14 +82,14 @@ public class Decode {
      * Decodes a {@code Todo} record of the form {@code T | <0|1> | <description>}.
      *
      * @param content the persisted record line
-     * @return a populated {@link Todo} with status applied
+     * @return a populated {@link Todo} with isDone applied
      */
     private static Task decodeTodo(String content) {
         String[] cmd = content.split(SEP, 3);
         String marked = cmd[1];
         String name = cmd[2];
         Task t = new Todo(name);
-        t.setStatus(marked.equals("1"));
+        t.setIsDone(marked.equals("1"));
         return t;
     }
 
@@ -98,7 +98,7 @@ public class Decode {
      * {@code D | <0|1> | <description> | <dd/MM/yyyy HH:mm>}.
      *
      * @param content the persisted record line
-     * @return a populated {@link Deadline} with status applied
+     * @return a populated {@link Deadline} with isDone applied
      * @throws java.time.format.DateTimeParseException if the timestamp is not in the expected format
      */
     private static Task decodeDeadline(String content) {
@@ -108,7 +108,7 @@ public class Decode {
         String by = cmd[3];
         LocalDateTime due = LocalDateTime.parse(by, STORED_FMT);
         Task t = new Deadline(name, due);
-        t.setStatus(marked.equals("1"));
+        t.setIsDone(marked.equals("1"));
         return t;
     }
 
@@ -118,7 +118,7 @@ public class Decode {
      * {@link Formats#CMD_DATETIME}.
      *
      * @param content the persisted record line
-     * @return a populated {@link Event} with status applied
+     * @return a populated {@link Event} with isDone applied
      * @throws java.time.format.DateTimeParseException if either timestamp is not in the expected format
      */
     private static Task decodeEvent(String content) {
@@ -128,7 +128,7 @@ public class Decode {
         LocalDateTime start = LocalDateTime.parse(cmd[3], STORED_FMT);
         LocalDateTime end = LocalDateTime.parse(cmd[4], STORED_FMT);
         Task t = new Event(name, start, end);
-        t.setStatus(marked.equals("1"));
+        t.setIsDone(marked.equals("1"));
         return t;
     }
 }

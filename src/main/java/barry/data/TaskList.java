@@ -67,7 +67,7 @@ public class TaskList {
      */
     public String markTask(int index, boolean marked) {
         assert index >= 0 && index < taskList.size() : "index out of bounds";
-        this.taskList.get(index).setStatus(marked);
+        this.taskList.get(index).setIsDone(marked);
         return taskList.get(index).toString();
     }
 
