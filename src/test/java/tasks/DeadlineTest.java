@@ -24,7 +24,7 @@ public class DeadlineTest {
     void mark_deadline() {
         LocalDateTime due = LocalDateTime.now();
         Deadline actual = new Deadline("CS2103T", due);
-        actual.setStatus(true);
+        actual.setIsDone(true);
         String expected = String.format("[D][X] CS2103T (by: %s)", formatter.format(due));
         assertEquals(actual.toString(), expected);
     }
