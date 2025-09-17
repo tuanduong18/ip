@@ -43,7 +43,7 @@ test {
 }
 
 application {
-    mainClass = "barry.gui.Launcher"
+    mainClass.set("barry.javafx.Launcher")
 }
 
 shadowJar {
