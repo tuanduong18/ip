@@ -2,10 +2,13 @@ package barry.alias;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,7 +41,7 @@ import java.util.Scanner;
 public final class AliasStorage {
 
     private final HashMap<String, String> templates = new HashMap<String, String>();
-    private Path rcPath = Paths.get("Barry data", ".barryrc");
+    private Path rcPath = Paths.get(System.getProperty("user.home"), "Barry data", ".barryrc");
 
     public AliasStorage() {}
     /**
@@ -56,45 +59,83 @@ public final class AliasStorage {
      * Existing aliases in memory are cleared first. If the file does not exist, no error is thrown.
      * </p>
      */
-    // inside AliasStorage (fields: HashMap<String,String> templates; Path rcPath; etc.)
     public void load() {
+        // Start fresh
         templates.clear();
+
+        // 1) Best-effort: ensure parent directory exists
         try {
-            if (rcPath.getParent() != null) {
-                Files.createDirectories(rcPath.getParent());
+            Path parent = rcPath.getParent();
+            if (parent != null && Files.notExists(parent)) {
+                Files.createDirectories(parent);
             }
-            loadDefault();
-            save();
-        } catch (IOException e) {
-            return;
+        } catch (FileAlreadyExistsException e) {
+            // A non-directory exists where the directory should be — proceed without failing.
+        } catch (AccessDeniedException e) {
+            // No permission to create directories — proceed; reading may still work.
+        } catch (java.io.IOException e) {
+            // Other I/O problems — proceed; reading may still work.
+        } catch (SecurityException e) {
+            // Security manager disallows file ops — proceed; reading may still work.
         }
 
+        // 2) If RC file is missing, seed from bundled default and try to save (both best-effort)
+        try {
+            if (Files.notExists(rcPath)) {
+                try {
+                    this.loadDefault(); // fill 'templates' from classpath default (if present)
+                } catch (SecurityException se) {
+                    // Classloader restricted — continue with empty templates
+                }
+                try {
+                    this.save(); // create the file with whatever we have (possibly empty)
+                } catch (SecurityException ignore) {
+                    // Can't write file — okay, continue with in-memory templates only
+                }
+            }
+        } catch (SecurityException ignore) {
+            // Cannot even check existence — proceed to read attempt below (will fail safely)
+        }
+
+        // 3) Read ~/.barryrc (UTF-8). Skip malformed lines, never throw.
         try {
             Scanner sc = new Scanner(new FileReader(rcPath.toFile()));
             while (sc.hasNextLine()) {
-                parseLine(sc.nextLine());
+                final String line = sc.nextLine();
+                // Your parseLine(...) is already defensive
+                parseLine(line);
             }
-            sc.close();
-        } catch (IOException e) {
-            return;
+            // If underlying stream had IO errors, Scanner records it; ignoring by design.
+            if (sc.ioException() != null) {
+                // Optionally log sc.ioException()
+            }
+        } catch (FileNotFoundException e) {
+            // File missing/unreadable — leave templates as-is.
+        } catch (SecurityException e) {
+            // No permission to read — leave templates as-is.
         }
     }
+
 
     /**
      * Load the aliases from resources/config/default.barryrc
      */
     private void loadDefault() {
-        try (InputStream in = getClass().getClassLoader().getResourceAsStream("config/default.barryrc")) {
+        try {
+            InputStream in = getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("config/default.barryrc");
             if (in == null) {
-                return; // no bundled default available
+                return; // No bundled default available
             }
             try (Scanner sc = new Scanner(in, UTF_8)) {
                 while (sc.hasNextLine()) {
                     parseLine(sc.nextLine());
                 }
+                // If an IO error occurred during scanning, it will be available via sc.ioException()
             }
-        } catch (IOException ignored) {
-            // leave templates empty if fallback read fails
+        } catch (SecurityException e) {
+            // Classloader/resource access restricted — ignore and return
         }
     }
 

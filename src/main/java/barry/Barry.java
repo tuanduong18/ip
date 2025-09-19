@@ -24,7 +24,7 @@ import barry.ui.Ui;
  * </p>
  */
 public class Barry {
-    private static final Path path = Paths.get("Barry data", "Barry.txt");
+    private static final Path path = Paths.get(System.getProperty("user.home"), "Barry data", "Barry.txt");
 
     // Print messages from Barry.Barry
     private final Ui ui;

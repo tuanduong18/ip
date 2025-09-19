@@ -89,13 +89,25 @@ public class Storage {
      * @throws BarryException if the file or its parent directories cannot be created
      */
     private static void ensureDataFileExists(File f) throws BarryException {
-        if (f.exists()) {
-            return;
-        }
         try {
-            boolean okParent = (f.getParentFile() == null) || f.getParentFile().mkdirs();
-            boolean okFile = f.createNewFile();
-            if (!okParent || !okFile) {
+            // If the target already exists as a file, we’re done.
+            if (f.isFile()) {
+                return;
+            }
+
+            // Ensure parent directory exists (idempotent).
+            File parent = f.getParentFile();
+            if (parent != null && !parent.exists()) {
+                // mkdirs() returns false if it already exists or creation failed.
+                // Consider it success if, after the call, the directory exists.
+                if (!parent.mkdirs() && !parent.exists()) {
+                    throw BarryException.invalidSourceFilePath();
+                }
+            }
+
+            // Create the file if missing. If it already exists, that's OK.
+            if (!f.exists() && !f.createNewFile()) {
+                // If createNewFile returned false AND the file still doesn't exist, it's an error.
                 throw BarryException.invalidSourceFilePath();
             }
         } catch (IOException e) {
